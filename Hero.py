@@ -2,12 +2,14 @@ import pygame
 from pygame.locals import *
 
 from BlankField import *
-
-SIZECELL = 40
+from config import FieldConstants as FC
 
 
 class Hero(pygame.sprite.Sprite):
-    global SIZECELL
+    
+    #FC.SIZECELL=FieldConstants.SIZE_CELL
+    
+    
     unitName = "rolobok"
     unitCod = 8
     speed = 5
@@ -58,11 +60,11 @@ class Hero(pygame.sprite.Sprite):
 
         self.image = self.images[self.arrmove[self.direct][self.__imindex]]
         self.rect = image.get_rect()
-        self.cX = parX * SIZECELL
-        self.cY = parY * SIZECELL
+        self.cX = parX * FC.SIZECELL
+        self.cY = parY * FC.SIZECELL
 
-        self.cX1 = self.cX // SIZECELL
-        self.cY1 = self.cY // SIZECELL
+        self.cX1 = self.cX // FC.SIZECELL
+        self.cY1 = self.cY // FC.SIZECELL
 
         self.cX2 = self.cX1
         self.cY2 = self.cY1
@@ -79,7 +81,7 @@ class Hero(pygame.sprite.Sprite):
         elif keys[K_DOWN]:
             self.direct = 3
 
-        if self.cX % SIZECELL == 0 and self.cY % SIZECELL == 0 and self.direct != 0:  # можно ли начать двигаться в текущем  направлении
+        if self.cX % FC.SIZECELL == 0 and self.cY % FC.SIZECELL == 0 and self.direct != 0:  # можно ли начать двигаться в текущем  направлении
 
             canMove = True
             for i in sp:
@@ -96,27 +98,27 @@ class Hero(pygame.sprite.Sprite):
                 tmp = [[0, -1], [1, 0], [0, 1], [-1, 0]]  # для шага вперед
                 self.cX += self.speedX * tmp[self.direct - 1][0]
                 self.cY += self.speedY * tmp[self.direct - 1][1]
-                self.cX1 = self.cX // SIZECELL
-                self.cY1 = self.cY // SIZECELL
+                self.cX1 = self.cX // FC.SIZECELL
+                self.cY1 = self.cY // FC.SIZECELL
 
                 sp.add(BlankField(self.cX1 + tmp[self.direct - 1][0], self.cY1 + tmp[self.direct - 1][1]))
 
         else:
             if self.direct == 0:
-                self.cX1 = self.cX // SIZECELL
-                self.cY1 = self.cY // SIZECELL
-                self.cX = self.cX1 * SIZECELL
-                self.cY = self.cY1 * SIZECELL
+                self.cX1 = self.cX // FC.SIZECELL
+                self.cY1 = self.cY // FC.SIZECELL
+                self.cX = self.cX1 * FC.SIZECELL
+                self.cY = self.cY1 * FC.SIZECELL
             else:
                 tmp = [[0, -1], [1, 0], [0, 1], [-1, 0]]  # для шага вперед
                 self.cX += self.speedX * tmp[self.direct - 1][0]
                 self.cY += self.speedY * tmp[self.direct - 1][1]
-                self.cX1 = self.cX // SIZECELL
-                self.cY1 = self.cY // SIZECELL
+                self.cX1 = self.cX // FC.SIZECELL
+                self.cY1 = self.cY // FC.SIZECELL
 
         self.rect.x = self.cX
         self.rect.y = self.cY
-        if self.cY % SIZECELL == 0 and self.cX % SIZECELL == 0:
+        if self.cY % FC.SIZECELL == 0 and self.cX % FC.SIZECELL == 0:
             self.direct = 0
 
     def draw(self, window):

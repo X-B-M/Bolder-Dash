@@ -1,7 +1,8 @@
 import pygame
+from config import FieldConstants as FC
 
 class BlankField(pygame.sprite.Sprite):
-  time_to_live=40
+  time_to_live=FC.SIZE_CELL
   speed_live=5
   slippery = False  # не скользкий, с него камни не скатываются
   def get_imindex(self): return self.__imindex
@@ -16,14 +17,14 @@ class BlankField(pygame.sprite.Sprite):
         self.image = self.images[self.__imindex]
         self.rect = image.get_rect()
 
-        self.cX =  parX*40 #random.randint(0,general.sizeFieldX-60)//60*60
-        self.cY =  parY*40  #random.randint(0,general.sizeFieldY-60)//60*60
+        self.cX =  parX*FC.SIZE_CELL #random.randint(0,general.sizeFieldX-60)//60*60
+        self.cY =  parY*FC.SIZE_CELL  #random.randint(0,general.sizeFieldY-60)//60*60
 
-        self.cX1=self.cX//40
-        self.cY1=self.cY//40
+        self.cX1=self.cX//FC.SIZE_CELL
+        self.cY1=self.cY//FC.SIZE_CELL
 
-        self.cX2=(self.cX+39)//40
-        self.cY2=(self.cY+39)//40
+        self.cX2=(self.cX+39)//FC.SIZE_CELL
+        self.cY2=(self.cY+39)//FC.SIZE_CELL
         self.unitName = "blank"
         self.unitCod = 0
   def update(self, sp):

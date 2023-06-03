@@ -3,11 +3,10 @@
 import sys
 import pygame
 from pygame.locals import *
-
+from config import FieldConstants as FC
 
 SIZEFIELD_X = 35
 SIZEFIELD_Y = 19
-SIZECELL = 40
 
 from BlankField import *
 from Wall import *
@@ -33,8 +32,8 @@ class Location(object):
 class General:
     level = 0
     music = 0
-    sizeFieldX = SIZEFIELD_X * SIZECELL
-    sizeFieldY = SIZEFIELD_Y * SIZECELL
+    sizeFieldX = SIZEFIELD_X * FC.SIZECELL
+    sizeFieldY = SIZEFIELD_Y * FC.SIZECELL
     map_game = []
 
     #    dict_game={} #"словарь" расположения юнитов на поле(в игре) x*100+y
