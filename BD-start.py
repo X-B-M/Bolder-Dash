@@ -15,8 +15,8 @@ from MonstrDiamond import *
 from Explosiv import *
 from Hero import *
 
-SIZEFIELD_X = 35
-SIZEFIELD_Y = 19
+FC.SIZEFIELD_X = 35
+FC.SIZEFIELD_Y = 19
 
 class Location(object):
     def __init__(self):
@@ -33,8 +33,8 @@ class General:
     
     level = 0
     music = 0
-    sizeFieldX = SIZEFIELD_X * FC.SIZE_CELL
-    sizeFieldY = SIZEFIELD_Y * FC.SIZE_CELL
+    sizeFieldX = FC.SIZEFIELD_X * FC.SIZE_CELL
+    sizeFieldY = FC.SIZEFIELD_Y * FC.SIZE_CELL
     map_game = []
 
     #    dict_game={} #"словарь" расположения юнитов на поле(в игре) x*100+y
@@ -46,9 +46,9 @@ class General:
         pygame.mixer.music.load('sound/05.mp3')
         pygame.mixer.music.play()
         pygame.mixer.music.pause()
-        for i in range(SIZEFIELD_X):
+        for i in range(FC.SIZEFIELD_X):
             self.map_game.append([])
-            for j in range(SIZEFIELD_Y):
+            for j in range(FC.SIZEFIELD_Y):
                 self.map_game[i].append([])
 
     def event(self, event):
