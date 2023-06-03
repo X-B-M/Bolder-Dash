@@ -1,9 +1,8 @@
 import pygame
 from pygame.locals import *
+from config import FieldConstants as FC
 
-SIZECELL=40
 class Wall(pygame.sprite.Sprite):
-    global SIZECELL
     speedX = 0
     speedY = 0
     speed = 0
@@ -32,14 +31,14 @@ class Wall(pygame.sprite.Sprite):
         self.unitCod = typeOfWall
         self.image = self.images[self.__imindex]
         self.rect = image.get_rect()
-        self.cX = parX * SIZECELL  # random.randint(0,general.sizeFieldX-60)//60*60
-        self.cY = parY * SIZECELL  # random.randint(0,general.sizeFieldY-60)//60*60
+        self.cX = parX * FC.SIZE_CELL  # random.randint(0,general.sizeFieldX-60)//60*60
+        self.cY = parY * FC.SIZE_CELL  # random.randint(0,general.sizeFieldY-60)//60*60
 
-        self.cX1 = self.cX // SIZECELL
-        self.cY1 = self.cY // SIZECELL
+        self.cX1 = self.cX // FC.SIZE_CELL
+        self.cY1 = self.cY // FC.SIZE_CELL
 
-        self.cX2 = (self.cX + 39) // SIZECELL
-        self.cY2 = (self.cY + 39) // SIZECELL
+        self.cX2 = (self.cX + 39) // FC.SIZE_CELL
+        self.cY2 = (self.cY + 39) // FC.SIZE_CELL
         if typeOfWall == 1:
             self.unitName = "wall_steel"
         else:

@@ -44,14 +44,14 @@ class Diamond(pygame.sprite.Sprite):
         self.image = self.images[self.__imindex]
         self.rect = image.get_rect()
 
-        self.cX = parX*FC.SIZECELL
-        self.cY = parY*FC.SIZECELL
+        self.cX = parX*FC.SIZE_CELL
+        self.cY = parY*FC.SIZE_CELL
 
-        self.cX1=self.cX//FC.SIZECELL
-        self.cY1=self.cY//FC.SIZECELL
+        self.cX1=self.cX//FC.SIZE_CELL
+        self.cY1=self.cY//FC.SIZE_CELL
 
-        self.cX2=(self.cX+39)//FC.SIZECELL
-        self.cY2=(self.cY+39)//FC.SIZECELL
+        self.cX2=(self.cX+39)//FC.SIZE_CELL
+        self.cY2=(self.cY+39)//FC.SIZE_CELL
 
         self.unitName="diamond"
         self.unitCod=5
@@ -76,7 +76,7 @@ class Diamond(pygame.sprite.Sprite):
             for i in sp:
                 if i.unitCod in [6, 7, 8]:
                  #   print("Энерг=",self.kinect_energy,"камень=", self.cY, self.cY1, "Монстр=",i.cY, i.cY1)
-                    if self.cX1 + tmp[self.direct - 1][0] == i.cX1 and self.cY + FC.SIZECELL*tmp[self.direct - 1][1] >= i.cY:
+                    if self.cX1 + tmp[self.direct - 1][0] == i.cX1 and self.cY + FC.SIZE_CELL*tmp[self.direct - 1][1] >= i.cY:
                         # цель найдена, взрываем
                         flag_kill.append(i.cX1)
                         flag_kill.append(i.cY1)
@@ -105,7 +105,7 @@ class Diamond(pygame.sprite.Sprite):
                         else:
                             sp.add(Explosiv(i[0], i[1]))
 
-        if self.cX % FC.SIZECELL == 0 and self.cY % FC.SIZECELL == 0:  # можно ли начать двигаться в текущем  направлении
+        if self.cX % FC.SIZE_CELL == 0 and self.cY % FC.SIZE_CELL == 0:  # можно ли начать двигаться в текущем  направлении
             canMove = True
             canMove23 = True
             canMove43 = True
@@ -127,7 +127,7 @@ class Diamond(pygame.sprite.Sprite):
             if canMove:  # падаем вниз
                 sp.add(BlankField(self.cX1, self.cY1 + 1))
                 self.cY += self.speedY
-                self.cY1 = self.cY // FC.SIZECELL
+                self.cY1 = self.cY // FC.SIZE_CELL
                 self.direct = 3
                 self.kinect_energy = 8
 
@@ -135,9 +135,9 @@ class Diamond(pygame.sprite.Sprite):
             elif canMove23:  # соскальзываем вправо
                 sp.add(BlankField(self.cX1 + 1, self.cY1))
                 self.cX += self.speedX
-                self.cX1 = self.cX // FC.SIZECELL
+                self.cX1 = self.cX // FC.SIZE_CELL
 
-                if self.cX % FC.SIZECELL == 0:  # дошли вправо до конца ячейки, надо падать вниз
+                if self.cX % FC.SIZE_CELL == 0:  # дошли вправо до конца ячейки, надо падать вниз
                     self.direct = 3
                 else:
                     self.direct = 2
@@ -146,9 +146,9 @@ class Diamond(pygame.sprite.Sprite):
             elif canMove43:  # соскальзываем влево
                 sp.add(BlankField(self.cX1 - 1, self.cY1))
                 self.cX -= self.speedX
-                self.cX1 = self.cX // FC.SIZECELL
+                self.cX1 = self.cX // FC.SIZE_CELL
 
-                if self.cX % FC.SIZECELL == 0:  # дошли вправо до конца ячейки, надо падать вниз
+                if self.cX % FC.SIZE_CELL == 0:  # дошли вправо до конца ячейки, надо падать вниз
                     self.direct = 3
                 else:
                     self.direct = 4
@@ -159,21 +159,21 @@ class Diamond(pygame.sprite.Sprite):
         else:
             if  self.direct == 3: # вниз
                 self.cY += self.speedY
-                self.cY1 = self.cY // FC.SIZECELL
+                self.cY1 = self.cY // FC.SIZE_CELL
                 self.direct = 3
 
             elif self.direct == 2:  # Либо его толкают направо, либо соскальзывает направо.
                 self.cX += self.speedX
-                self.cX1 = self.cX // FC.SIZECELL
-                if self.cX % FC.SIZECELL == 0:  # дошли вправо до конца ячейки, надо падать вниз
+                self.cX1 = self.cX // FC.SIZE_CELL
+                if self.cX % FC.SIZE_CELL == 0:  # дошли вправо до конца ячейки, надо падать вниз
                     self.direct = 3
                 else:
                     self.direct = 2
 
             elif self.direct == 4:  # Либо его толкают налнво, либо соскальзывает налево.
                 self.cX -= self.speedX
-                self.cX1 = self.cX // FC.SIZECELL
-                if self.cX % FC.SIZECELL == 0:  # дошли вправо до конца ячейки, надо падать вниз
+                self.cX1 = self.cX // FC.SIZE_CELL
+                if self.cX % FC.SIZE_CELL == 0:  # дошли вправо до конца ячейки, надо падать вниз
                     self.direct = 3
                 else:
                     self.direct = 4

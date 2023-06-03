@@ -1,12 +1,9 @@
 import pygame
 from pygame.locals import *
-
-SIZECELL = 40
-
+from config import FieldConstants as FC
 
 class Explosiv(pygame.sprite.Sprite):
-    global SIZECELL
-    time_to_live = SIZECELL
+    time_to_live = FC.SIZE_CELL
     speed_live = 2
     slippery = False  # не скользкий, с него камни не скатываются
     statusTimeLife = 13  # для отсчета номера картинки
@@ -46,14 +43,14 @@ class Explosiv(pygame.sprite.Sprite):
         self.image = self.images[self.__imindex]
         self.rect = image.get_rect()
 
-        self.cX = parX * SIZECELL  # random.randint(0,general.sizeFieldX-60)//60*60
-        self.cY = parY * SIZECELL  # random.randint(0,general.sizeFieldY-60)//60*60
+        self.cX = parX * FC.SIZE_CELL  # random.randint(0,general.sizeFieldX-60)//60*60
+        self.cY = parY * FC.SIZE_CELL  # random.randint(0,general.sizeFieldY-60)//60*60
 
-        self.cX1 = self.cX // SIZECELL
-        self.cY1 = self.cY // SIZECELL
+        self.cX1 = self.cX // FC.SIZE_CELL
+        self.cY1 = self.cY // FC.SIZE_CELL
 
-        self.cX2 = (self.cX + 39) // SIZECELL
-        self.cY2 = (self.cY + 39) // SIZECELL
+        self.cX2 = (self.cX + 39) // FC.SIZE_CELL
+        self.cY2 = (self.cY + 39) // FC.SIZE_CELL
         self.unitName = "blank"
         self.unitCod = 0
 

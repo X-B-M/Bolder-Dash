@@ -1,10 +1,9 @@
 import pygame
 from pygame.locals import *
-SIZECELL=40
+from config import FieldConstants as FC
 from BlankField import *
 
 class MonstrDiamond(pygame.sprite.Sprite):
-    global SIZECELL
     speedX = 5
     speedY = 5
     cY1 = 0
@@ -48,14 +47,14 @@ class MonstrDiamond(pygame.sprite.Sprite):
         self.image = self.images[self.__imindex]
         self.rect = image.get_rect()
 
-        self.cX = parX * SIZECELL
-        self.cY = parY * SIZECELL
+        self.cX = parX * FC.SIZE_CELL
+        self.cY = parY * FC.SIZE_CELL
 
-        self.cX1 = self.cX // SIZECELL
-        self.cY1 = self.cY // SIZECELL
+        self.cX1 = self.cX // FC.SIZE_CELL
+        self.cY1 = self.cY // FC.SIZE_CELL
 
-        self.cX2 = (self.cX + 39) // SIZECELL
-        self.cY2 = (self.cY + 39) // SIZECELL
+        self.cX2 = (self.cX + 39) // FC.SIZE_CELL
+        self.cY2 = (self.cY + 39) // FC.SIZE_CELL
 
         self.unitName = "monstrdiamond"
         self.unitCod = 7
@@ -75,7 +74,7 @@ class MonstrDiamond(pygame.sprite.Sprite):
         self.image = self.images[self.__imindex]
 
         # если удачно пршли вперед, то направление следующей попытки движения меняеи на следующее
-        if self.cX % SIZECELL == 0 and self.cY % SIZECELL == 0:  # можно ли начать двигаться в текущем  направлении
+        if self.cX % FC.SIZE_CELL == 0 and self.cY % FC.SIZE_CELL == 0:  # можно ли начать двигаться в текущем  направлении
             self.direct = self.direct_list[0]
             exist_support = False  # если справа по направлению движения есть спрайт(опора), то двигаться можно
             # иначе - меняем напраление на следующее в массиве
@@ -94,8 +93,8 @@ class MonstrDiamond(pygame.sprite.Sprite):
                 if can_move:  # начинаем двигаться в текущем напрвалении
                     self.cX += self.speedX * tmp[self.direct - 1][0]
                     self.cY += self.speedY * tmp[self.direct - 1][1]
-                    self.cX1 = self.cX // SIZECELL
-                    self.cY1 = self.cY // SIZECELL
+                    self.cX1 = self.cX // FC.SIZE_CELL
+                    self.cY1 = self.cY // FC.SIZE_CELL
 
                     sp.add(BlankField(self.cX1 + tmp[self.direct - 1][0], self.cY1 + tmp[self.direct - 1][1]))
 
@@ -108,8 +107,8 @@ class MonstrDiamond(pygame.sprite.Sprite):
                 tmp = [[0, -1], [1, 0], [0, 1], [-1, 0]]  # для шага вперед
                 self.cX += self.speedX * tmp[self.direct - 1][0]
                 self.cY += self.speedY * tmp[self.direct - 1][1]
-                self.cX1 = self.cX // SIZECELL
-                self.cY1 = self.cY // SIZECELL
+                self.cX1 = self.cX // FC.SIZE_CELL
+                self.cY1 = self.cY // FC.SIZE_CELL
 
                 sp.add(BlankField(self.cX1 + tmp[self.direct - 1][0], self.cY1 + tmp[self.direct - 1][1]))
 
@@ -117,8 +116,8 @@ class MonstrDiamond(pygame.sprite.Sprite):
             tmp = [[0, -1], [1, 0], [0, 1], [-1, 0]]  # для шага вперед
             self.cX += self.speedX * tmp[self.direct - 1][0]
             self.cY += self.speedY * tmp[self.direct - 1][1]
-            self.cX1 = self.cX // SIZECELL
-            self.cY1 = self.cY // SIZECELL
+            self.cX1 = self.cX // FC.SIZE_CELL
+            self.cY1 = self.cY // FC.SIZE_CELL
 
         self.rect.x = self.cX
         self.rect.y = self.cY

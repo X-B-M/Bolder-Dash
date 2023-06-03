@@ -5,9 +5,6 @@ import pygame
 from pygame.locals import *
 from config import FieldConstants as FC
 
-SIZEFIELD_X = 35
-SIZEFIELD_Y = 19
-
 from BlankField import *
 from Wall import *
 from Plane import *
@@ -17,6 +14,9 @@ from MonstrBlank import *
 from MonstrDiamond import *
 from Explosiv import *
 from Hero import *
+
+SIZEFIELD_X = 35
+SIZEFIELD_Y = 19
 
 class Location(object):
     def __init__(self):
@@ -30,10 +30,11 @@ class Location(object):
 
 
 class General:
+    
     level = 0
     music = 0
-    sizeFieldX = SIZEFIELD_X * FC.SIZECELL
-    sizeFieldY = SIZEFIELD_Y * FC.SIZECELL
+    sizeFieldX = SIZEFIELD_X * FC.SIZE_CELL
+    sizeFieldY = SIZEFIELD_Y * FC.SIZE_CELL
     map_game = []
 
     #    dict_game={} #"словарь" расположения юнитов на поле(в игре) x*100+y
