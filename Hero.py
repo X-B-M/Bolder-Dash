@@ -2,13 +2,16 @@ import pygame
 from pygame.locals import *
 
 from BlankField import *
+
 SIZECELL = 40
+
+
 class Hero(pygame.sprite.Sprite):
     global SIZECELL
-    unitName="rolobok"
-    unitCod=8
-    speed=5
-    direct = 0 # 0-no move,1-up,2-right,3-down,4-left
+    unitName = "rolobok"
+    unitCod = 8
+    speed = 5
+    direct = 0  # 0-no move,1-up,2-right,3-down,4-left
     arrmove = [[0, 0],
                [5, 6],
                [3, 4],
@@ -17,51 +20,52 @@ class Hero(pygame.sprite.Sprite):
     speedX = 5
     speedY = 5
     slippery = False
+
     def __init__(self, parX, parY):
 
         pygame.sprite.Sprite.__init__(self)
 
         self.images = []
         image = pygame.image.load('img/hero_0.png').convert()
-        image.set_colorkey(image.get_at((0,0)), RLEACCEL)
+        image.set_colorkey(image.get_at((0, 0)), RLEACCEL)
         self.images.append(image)
 
         image = pygame.image.load('img/hero_l1.png').convert()
-        image.set_colorkey(image.get_at((0,0)), RLEACCEL)
+        image.set_colorkey(image.get_at((0, 0)), RLEACCEL)
         self.images.append(image)
 
         image = pygame.image.load('img/hero_l2.png').convert()
-        image.set_colorkey(image.get_at((0,0)), RLEACCEL)
+        image.set_colorkey(image.get_at((0, 0)), RLEACCEL)
         self.images.append(image)
 
         image = pygame.image.load('img/hero_r1.png').convert()
-        image.set_colorkey(image.get_at((0,0)), RLEACCEL)
+        image.set_colorkey(image.get_at((0, 0)), RLEACCEL)
         self.images.append(image)
 
         image = pygame.image.load('img/hero_r2.png').convert()
-        image.set_colorkey(image.get_at((0,0)), RLEACCEL)
+        image.set_colorkey(image.get_at((0, 0)), RLEACCEL)
         self.images.append(image)
 
         image = pygame.image.load('img/hero_up1.png').convert()
-        image.set_colorkey(image.get_at((0,0)), RLEACCEL)
+        image.set_colorkey(image.get_at((0, 0)), RLEACCEL)
         self.images.append(image)
 
         image = pygame.image.load('img/hero_up2.png').convert()
-        image.set_colorkey(image.get_at((0,0)), RLEACCEL)
+        image.set_colorkey(image.get_at((0, 0)), RLEACCEL)
         self.images.append(image)
 
         self.__imindex = 1
 
         self.image = self.images[self.arrmove[self.direct][self.__imindex]]
         self.rect = image.get_rect()
-        self.cX = parX*SIZECELL
-        self.cY = parY*SIZECELL
+        self.cX = parX * SIZECELL
+        self.cY = parY * SIZECELL
 
-        self.cX1=self.cX//SIZECELL
-        self.cY1=self.cY//SIZECELL
+        self.cX1 = self.cX // SIZECELL
+        self.cY1 = self.cY // SIZECELL
 
-        self.cX2=self.cX1
-        self.cY2=self.cY1
+        self.cX2 = self.cX1
+        self.cY2 = self.cY1
 
     def update(self, sp):
 
@@ -98,11 +102,11 @@ class Hero(pygame.sprite.Sprite):
                 sp.add(BlankField(self.cX1 + tmp[self.direct - 1][0], self.cY1 + tmp[self.direct - 1][1]))
 
         else:
-            if self.direct==0:
+            if self.direct == 0:
                 self.cX1 = self.cX // SIZECELL
                 self.cY1 = self.cY // SIZECELL
-                self.cX = self.cX1*SIZECELL
-                self.cY = self.cY1*SIZECELL
+                self.cX = self.cX1 * SIZECELL
+                self.cY = self.cY1 * SIZECELL
             else:
                 tmp = [[0, -1], [1, 0], [0, 1], [-1, 0]]  # для шага вперед
                 self.cX += self.speedX * tmp[self.direct - 1][0]
@@ -112,15 +116,11 @@ class Hero(pygame.sprite.Sprite):
 
         self.rect.x = self.cX
         self.rect.y = self.cY
-        if self.cY % SIZECELL ==0 and self.cX % SIZECELL ==0:
+        if self.cY % SIZECELL == 0 and self.cX % SIZECELL == 0:
             self.direct = 0
 
+    def draw(self, window):
+        self.__imindex = 1 & (self.__imindex + 1)
+        self.image = self.images[self.arrmove[max(self.direct, self.direct)][self.__imindex]]
 
-
-    def draw(self,window):
-        self.__imindex=1 & ( self.__imindex + 1 )
-        self.image = self.images[self.arrmove[max(self.direct,self.direct)][self.__imindex]]
-
-        window.blit(self.image,(self.cX,self.cY))
-
-
+        window.blit(self.image, (self.cX, self.cY))
