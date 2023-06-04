@@ -2,13 +2,11 @@ import pygame
 from pygame.locals import *
 
 from BlankField import *
-from config import FieldConstants as FC
+from config import FieldConstants as fc
+
 
 class Hero(pygame.sprite.Sprite):
-    
-    #FC.SIZE_CELL=FieldConstants.SIZE_CELL
-    
-    
+
     unitName = "rolobok"
     unitCod = 8
     speed = 5
@@ -59,69 +57,71 @@ class Hero(pygame.sprite.Sprite):
 
         self.image = self.images[self.arrmove[self.direct][self.__imindex]]
         self.rect = image.get_rect()
-        self.cX = parX * FC.SIZE_CELL
-        self.cY = parY * FC.SIZE_CELL
+        self.cX = parX * fc.SIZE_CELL
+        self.cY = parY * fc.SIZE_CELL
 
-        self.cX1 = self.cX // FC.SIZE_CELL
-        self.cY1 = self.cY // FC.SIZE_CELL
+        self.cX1 = self.cX // fc.SIZE_CELL
+        self.cY1 = self.cY // fc.SIZE_CELL
 
         self.cX2 = self.cX1
         self.cY2 = self.cY1
 
     def update(self, sp):
 
-        keys = pygame.key.get_pressed()
-        if keys[K_LEFT]:
-            self.direct = 4
-        elif keys[K_RIGHT]:
-            self.direct = 2
-        elif keys[K_UP]:
-            self.direct = 1
-        elif keys[K_DOWN]:
-            self.direct = 3
+        if self.cX % fc.SIZE_CELL == 0 and self.cY % fc.SIZE_CELL == 0:
+            keys = pygame.key.get_pressed()
+            if keys[K_LEFT]:
+                self.direct = 4
+            elif keys[K_RIGHT]:
+                self.direct = 2
+            elif keys[K_UP]:
+                self.direct = 1
+            elif keys[K_DOWN]:
+                self.direct = 3
 
-        if self.cX % FC.SIZE_CELL == 0 and self.cY % FC.SIZE_CELL == 0 and self.direct != 0:  # можно ли начать двигаться в текущем  направлении
+        if self.cX % fc.SIZE_CELL == 0 and self.cY % fc.SIZE_CELL == 0 and self.direct != 0:  # можно ли начать двигаться в текущем  направлении
 
-            canMove = True
+            can_move = True
             for i in sp:
                 if self.cX1 == i.cX1 and self.cY1 + 1 == i.cY1 and self.direct == 3 and i.unitCod != 3:
-                    canMove = False
+                    can_move = False
                 if self.cX1 + 1 == i.cX1 and self.cY1 == i.cY1 and self.direct == 2 and i.unitCod != 3:
-                    canMove = False
+                    can_move = False
                 if self.cX1 - 1 == i.cX1 and self.cY1 == i.cY1 and self.direct == 4 and i.unitCod != 3:
-                    canMove = False
+                    can_move = False
                 if self.cX1 == i.cX1 and self.cY1 - 1 == i.cY1 and self.direct == 1 and i.unitCod != 3:
-                    canMove = False
+                    can_move = False
 
-            if canMove:
+            if can_move:
                 tmp = [[0, -1], [1, 0], [0, 1], [-1, 0]]  # для шага вперед
                 self.cX += self.speedX * tmp[self.direct - 1][0]
                 self.cY += self.speedY * tmp[self.direct - 1][1]
-                self.cX1 = self.cX // FC.SIZE_CELL
-                self.cY1 = self.cY // FC.SIZE_CELL
+                self.cX1 = self.cX // fc.SIZE_CELL
+                self.cY1 = self.cY // fc.SIZE_CELL
 
                 sp.add(BlankField(self.cX1 + tmp[self.direct - 1][0], self.cY1 + tmp[self.direct - 1][1]))
 
         else:
             if self.direct == 0:
-                self.cX1 = self.cX // FC.SIZE_CELL
-                self.cY1 = self.cY // FC.SIZE_CELL
-                self.cX = self.cX1 * FC.SIZE_CELL
-                self.cY = self.cY1 * FC.SIZE_CELL
+                self.cX1 = self.cX // fc.SIZE_CELL
+                self.cY1 = self.cY // fc.SIZE_CELL
+                self.cX = self.cX1 * fc.SIZE_CELL
+                self.cY = self.cY1 * fc.SIZE_CELL
             else:
                 tmp = [[0, -1], [1, 0], [0, 1], [-1, 0]]  # для шага вперед
                 self.cX += self.speedX * tmp[self.direct - 1][0]
                 self.cY += self.speedY * tmp[self.direct - 1][1]
-                self.cX1 = self.cX // FC.SIZE_CELL
-                self.cY1 = self.cY // FC.SIZE_CELL
+                self.cX1 = self.cX // fc.SIZE_CELL
+                self.cY1 = self.cY // fc.SIZE_CELL
 
         self.rect.x = self.cX
         self.rect.y = self.cY
-        if self.cY % FC.SIZE_CELL == 0 and self.cX % FC.SIZE_CELL == 0:
+        if self.cY % fc.SIZE_CELL == 0 and self.cX % fc.SIZE_CELL == 0:
             self.direct = 0
 
-    def draw(self, window):
         self.__imindex = 1 & (self.__imindex + 1)
-        self.image = self.images[self.arrmove[max(self.direct, self.direct)][self.__imindex]]
+        self.image = self.images[self.arrmove[self.direct][self.__imindex]]
+
+    def draw(self, window):
 
         window.blit(self.image, (self.cX, self.cY))

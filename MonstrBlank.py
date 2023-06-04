@@ -1,6 +1,6 @@
 import pygame
 from pygame.locals import *
-from config import FieldConstants as FC
+from config import FieldConstants as fc
 
 from BlankField import *
 
@@ -49,14 +49,14 @@ class MonstrBlank(pygame.sprite.Sprite):
         self.image = self.images[self.__imindex]
         self.rect = image.get_rect()
 
-        self.cX = parX * FC.SIZE_CELL
-        self.cY = parY * FC.SIZE_CELL
+        self.cX = parX * fc.SIZE_CELL
+        self.cY = parY * fc.SIZE_CELL
 
-        self.cX1 = self.cX // FC.SIZE_CELL
-        self.cY1 = self.cY // FC.SIZE_CELL
+        self.cX1 = self.cX // fc.SIZE_CELL
+        self.cY1 = self.cY // fc.SIZE_CELL
 
-        self.cX2 = (self.cX + 39) // FC.SIZE_CELL
-        self.cY2 = (self.cY + 39) // FC.SIZE_CELL
+        self.cX2 = (self.cX + 39) // fc.SIZE_CELL
+        self.cY2 = (self.cY + 39) // fc.SIZE_CELL
 
         self.unitName = "monstrblank"
         self.unitCod = 6
@@ -76,7 +76,8 @@ class MonstrBlank(pygame.sprite.Sprite):
         self.image = self.images[self.__imindex]
 
         # если удачно пршли вперед, то направление следующей попытки движения меняеи на следующее
-        if self.cX % FC.SIZE_CELL == 0 and self.cY % FC.SIZE_CELL == 0:  # можно ли начать двигаться в текущем  направлении
+        if self.cX % fc.SIZE_CELL == 0 and self.cY % fc.SIZE_CELL == 0:  # можно ли начать двигаться в текущем
+            # направлении
             self.direct = self.direct_list[0]
             exist_support = False  # если справа по направлению движения есть спрайт(опора), то двигаться можно
             # иначе - меняем напраление на следующее в массиве
@@ -95,8 +96,8 @@ class MonstrBlank(pygame.sprite.Sprite):
                 if can_move:  # начинаем двигаться в текущем напрвалении
                     self.cX += self.speedX * tmp[self.direct - 1][0]
                     self.cY += self.speedY * tmp[self.direct - 1][1]
-                    self.cX1 = self.cX // FC.SIZE_CELL
-                    self.cY1 = self.cY // FC.SIZE_CELL
+                    self.cX1 = self.cX // fc.SIZE_CELL
+                    self.cY1 = self.cY // fc.SIZE_CELL
 
                     sp.add(BlankField(self.cX1 + tmp[self.direct - 1][0], self.cY1 + tmp[self.direct - 1][1]))
 
@@ -109,8 +110,8 @@ class MonstrBlank(pygame.sprite.Sprite):
                 tmp = [[0, -1], [1, 0], [0, 1], [-1, 0]]  # для шага вперед
                 self.cX += self.speedX * tmp[self.direct - 1][0]
                 self.cY += self.speedY * tmp[self.direct - 1][1]
-                self.cX1 = self.cX // FC.SIZE_CELL
-                self.cY1 = self.cY // FC.SIZE_CELL
+                self.cX1 = self.cX // fc.SIZE_CELL
+                self.cY1 = self.cY // fc.SIZE_CELL
 
                 sp.add(BlankField(self.cX1+tmp[self.direct - 1][0], self.cY1+tmp[self.direct - 1][1]))
 
@@ -118,8 +119,8 @@ class MonstrBlank(pygame.sprite.Sprite):
             tmp = [[0, -1], [1, 0], [0, 1], [-1, 0]]  # для шага вперед
             self.cX += self.speedX * tmp[self.direct - 1][0]
             self.cY += self.speedY * tmp[self.direct - 1][1]
-            self.cX1 = self.cX // FC.SIZE_CELL
-            self.cY1 = self.cY // FC.SIZE_CELL
+            self.cX1 = self.cX // fc.SIZE_CELL
+            self.cY1 = self.cY // fc.SIZE_CELL
 
         self.rect.x = self.cX
         self.rect.y = self.cY

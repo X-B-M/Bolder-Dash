@@ -5,15 +5,16 @@ import pygame
 from pygame.locals import *
 from config import FieldConstants as FC
 
-from BlankField import *
+
 from Wall import *
 from Plane import *
-from Diamond import *
 from Stone import *
 from MonstrBlank import *
 from MonstrDiamond import *
-from Explosiv import *
 from Hero import *
+from Diamond import *
+from Explosiv import *
+from BlankField import *
 
 FC.SIZEFIELD_X = 35
 FC.SIZEFIELD_Y = 19
