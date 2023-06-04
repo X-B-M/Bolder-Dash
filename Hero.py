@@ -88,7 +88,7 @@ class Hero(pygame.sprite.Sprite, BaseSprite):
             # двигаться в текущем  направлении
 
             can_move = self.check_move(sp, self.cX1, self.cY1, self.direct)
-            print(can_move, self.cX1, self.cY1, self.direct)
+
             if can_move == 0: # если пусто, то просто шагаем вперед
                 tmp = [[0, -1], [1, 0], [0, 1], [-1, 0]]  # для шага вперед
                 self.cX += self.speedX * tmp[self.direct - 1][0]
@@ -100,9 +100,6 @@ class Hero(pygame.sprite.Sprite, BaseSprite):
             else:
                 forward_sprite=self.get_sprite_by_id(sp, can_move)
                 if forward_sprite.unitCod == 3:
-                    print("hero:",self.cX1)
-                    print("plane:", forward_sprite.cX1)
-                    print()
                     tmp = [[0, -1], [1, 0], [0, 1], [-1, 0]]  # для шага вперед
                     self.cX += self.speedX * tmp[self.direct - 1][0]
                     self.cY += self.speedY * tmp[self.direct - 1][1]
