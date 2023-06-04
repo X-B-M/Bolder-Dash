@@ -1,11 +1,10 @@
 import pygame
 from pygame.locals import *
-from config import FieldConstants as fc
-
+from config import FieldConstants as fc, itera_id
 from BlankField import *
 
 
-class MonstrBlank(pygame.sprite.Sprite):
+class MonstrBlank(pygame.sprite.Sprite, BaseSprite):
     speedX = 5
     speedY = 5
     cY1 = 0
@@ -26,6 +25,9 @@ class MonstrBlank(pygame.sprite.Sprite):
         self.__imindex = value
 
     def __init__(self, parX, parY):
+
+        self.id = self.get_id()
+
         pygame.sprite.Sprite.__init__(self)
         self.images = []
         image = pygame.image.load('img/monstr_blank1.png').convert()
@@ -78,6 +80,7 @@ class MonstrBlank(pygame.sprite.Sprite):
         # если удачно пршли вперед, то направление следующей попытки движения меняеи на следующее
         if self.cX % fc.SIZE_CELL == 0 and self.cY % fc.SIZE_CELL == 0:  # можно ли начать двигаться в текущем
             # направлении
+            print(self.id)
             self.direct = self.direct_list[0]
             exist_support = False  # если справа по направлению движения есть спрайт(опора), то двигаться можно
             # иначе - меняем напраление на следующее в массиве

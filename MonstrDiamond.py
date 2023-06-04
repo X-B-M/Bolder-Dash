@@ -1,9 +1,10 @@
 import pygame
 from pygame.locals import *
-from config import FieldConstants as fc
+from config import FieldConstants as fc, itera_id
 from BlankField import *
 
-class MonstrDiamond(pygame.sprite.Sprite):
+
+class MonstrDiamond(pygame.sprite.Sprite, BaseSprite):
     speedX = 5
     speedY = 5
     cY1 = 0
@@ -24,6 +25,9 @@ class MonstrDiamond(pygame.sprite.Sprite):
         self.__imindex = value
 
     def __init__(self, parX, parY):
+
+        self.id = self.get_id()
+
         pygame.sprite.Sprite.__init__(self)
         self.images = []
         image = pygame.image.load('img/monstr_diamond1.png').convert()

@@ -1,15 +1,18 @@
 import pygame
 from pygame.locals import *
-from config import FieldConstants as fc
+from config import FieldConstants as fc, itera_id
+from base_sprite import BaseSprite
 
-
-class Plane(pygame.sprite.Sprite):
+class Plane(pygame.sprite.Sprite, BaseSprite):
     slippery = False  # не скользкий, с него камни не скатываются
     def get_imindex(self): return self.__imindex
 
     def set_imindex(self, value): self.__imindex = value
 
     def __init__(self, parX, parY):
+
+        self.id = self.get_id()
+
         pygame.sprite.Sprite.__init__(self)
         self.images = []
         image = pygame.image.load('img/plane.png').convert()

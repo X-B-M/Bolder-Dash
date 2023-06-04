@@ -144,17 +144,6 @@ class Game_location(Location):
                 tX += 1
             tY += 1
         f.close()#        keys = pygame.key.get_pressed()
-#        movedirect=0
-#	    if keys[K_LEFT]:
-#	        movedirect=4
-#	    elifif keys[K_RIGHT]:
-#	        movedirect=2
-#	    elifif keys[K_UP]:
-#	        movedirect=1
-#	    elifif keys[K_DOWN]:
-#	        movedirect=3
-#       self.kolobok.move(movedirect)
-
 
     def draw(self):
 

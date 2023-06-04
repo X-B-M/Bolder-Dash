@@ -1,10 +1,10 @@
-
 from BlankField import *
 from Explosiv import *
 from Diamond import *
 from config import FieldConstants as FC
 
-class Stone(pygame.sprite.Sprite):
+
+class Stone(pygame.sprite.Sprite, BaseSprite):
     speedX = 5
     speedY = 5
     cY1 = 0
@@ -23,6 +23,9 @@ class Stone(pygame.sprite.Sprite):
         self.__imindex = value
 
     def __init__(self, parX, parY):
+
+        self.id = self.get_id()
+
         pygame.sprite.Sprite.__init__(self)
         self.images = []
         image = pygame.image.load('img/stone01.png').convert()
@@ -60,41 +63,41 @@ class Stone(pygame.sprite.Sprite):
 
     def update(self, sp):
 
-        if self.kinect_energy >0:
+        if self.kinect_energy > 0:
             tmp = [[0, -1], [1, 0], [0, 1], [-1, 0]]  # для поиска цели
             flag_kill = []
             for i in sp:
                 if i.unitCod in [6, 7, 8]:
-                 #   print("Энерг=",self.kinect_energy,"камень=", self.cY, self.cY1, "Монстр=",i.cY, i.cY1)
-                    if self.cX1 + tmp[self.direct - 1][0] == i.cX1 and self.cY + FC.SIZE_CELL*tmp[self.direct - 1][1] >= i.cY:
+                    #   print("Энерг=",self.kinect_energy,"камень=", self.cY, self.cY1, "Монстр=",i.cY, i.cY1)
+                    if self.cX1 + tmp[self.direct - 1][0] == i.cX1 and self.cY + FC.SIZE_CELL * tmp[self.direct - 1][
+                        1] >= i.cY:
                         # цель найдена, взрываем
                         flag_kill.append(i.cX1)
                         flag_kill.append(i.cY1)
                         flag_kill.append(i.unitCod)
                         break
-                        #i.kill()
-                        #self.kill()
+                        # i.kill()
+                        # self.kill()
 
-            if len(flag_kill)>0:
+            if len(flag_kill) > 0:
                 not_append = []
-                kill_append = [[i.cX1-1, i.cY1-1], [i.cX1, i.cY1-1], [i.cX1+1, i.cY1-1],
-                               [i.cX1-1, i.cY1],   [i.cX1, i.cY1],   [i.cX1+1, i.cY1],
-                               [i.cX1-1, i.cY1+1], [i.cX1, i.cY1+1], [i.cX1+1, i.cY1+1]]
-                for i in sp: # уничтожаем все вокруг монстра
-                    if i.cX1>=flag_kill[0]-1 and i.cX1<=flag_kill[0]+1:
+                kill_append = [[i.cX1 - 1, i.cY1 - 1], [i.cX1, i.cY1 - 1], [i.cX1 + 1, i.cY1 - 1],
+                               [i.cX1 - 1, i.cY1], [i.cX1, i.cY1], [i.cX1 + 1, i.cY1],
+                               [i.cX1 - 1, i.cY1 + 1], [i.cX1, i.cY1 + 1], [i.cX1 + 1, i.cY1 + 1]]
+                for i in sp:  # уничтожаем все вокруг монстра
+                    if i.cX1 >= flag_kill[0] - 1 and i.cX1 <= flag_kill[0] + 1:
                         if i.cY1 >= flag_kill[1] - 1 and i.cY1 <= flag_kill[1] + 1:
                             if i.unitCod != 1 and i.unitCod != 0:
                                 i.kill()
                             else:
-                                not_append.append([i.cX1,i.cY1])
+                                not_append.append([i.cX1, i.cY1])
 
                 for i in kill_append:
                     if i not in not_append:
-                        if flag_kill[2] in [7, 8]: # получаем алмазы
+                        if flag_kill[2] in [7, 8]:  # получаем алмазы
                             sp.add(Diamond(i[0], i[1]))
                         else:
                             sp.add(Explosiv(i[0], i[1]))
-
 
         if self.cX % FC.SIZE_CELL == 0 and self.cY % FC.SIZE_CELL == 0:  # можно ли начать двигаться в текущем  направлении
             canMove = True

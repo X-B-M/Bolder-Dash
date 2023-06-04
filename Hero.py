@@ -2,10 +2,11 @@ import pygame
 from pygame.locals import *
 
 from BlankField import *
-from config import FieldConstants as fc
+from base_sprite import BaseSprite
+from config import FieldConstants as fc, itera_id
 
 
-class Hero(pygame.sprite.Sprite):
+class Hero(pygame.sprite.Sprite, BaseSprite):
 
     unitName = "rolobok"
     unitCod = 8
@@ -21,6 +22,8 @@ class Hero(pygame.sprite.Sprite):
     slippery = False
 
     def __init__(self, parX, parY):
+
+        self.id = self.get_id()
 
         pygame.sprite.Sprite.__init__(self)
 
@@ -80,6 +83,7 @@ class Hero(pygame.sprite.Sprite):
                 self.direct = 3
 
         if self.cX % fc.SIZE_CELL == 0 and self.cY % fc.SIZE_CELL == 0 and self.direct != 0:  # можно ли начать двигаться в текущем  направлении
+            print(self.id)
 
             can_move = True
             for i in sp:

@@ -1,8 +1,11 @@
 import pygame
 from pygame.locals import *
-from config import FieldConstants as FC
 
-class Wall(pygame.sprite.Sprite):
+from base_sprite import BaseSprite
+from config import FieldConstants as FC, itera_id
+
+
+class Wall(pygame.sprite.Sprite, BaseSprite):
     speedX = 0
     speedY = 0
     speed = 0
@@ -17,6 +20,9 @@ class Wall(pygame.sprite.Sprite):
         self.__imindex = value
 
     def __init__(self, parX, parY, typeOfWall=1):
+
+        self.id = self.get_id()
+
         pygame.sprite.Sprite.__init__(self)
         self.images = []
         image = pygame.image.load('img/wall_steel.png').convert()

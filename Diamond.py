@@ -4,8 +4,11 @@ from pygame.locals import *
 
 from BlankField import *
 from Explosiv import *
+from base_sprite import BaseSprite
+from config import itera_id
 
-class Diamond(pygame.sprite.Sprite):
+
+class Diamond(pygame.sprite.Sprite, BaseSprite):
     speedX = 5
     speedY = 5
     cY1 = 0
@@ -21,6 +24,9 @@ class Diamond(pygame.sprite.Sprite):
     def set_imindex(self, value): self.__imindex = value  
 
     def __init__(self,parX,parY):
+
+        self.id = self.get_id()
+
         pygame.sprite.Sprite.__init__(self)
         self.images = []
         image = pygame.image.load('img/diamond_01.png').convert()
