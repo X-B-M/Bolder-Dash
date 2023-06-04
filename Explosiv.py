@@ -19,7 +19,7 @@ class Explosiv(pygame.sprite.Sprite, BaseSprite):
 
     def __init__(self, parX, parY):
 
-        self.id = self.get_id()
+        self.id = self.set_id()
 
         pygame.sprite.Sprite.__init__(self)
         self.images = []

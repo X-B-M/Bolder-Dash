@@ -3,7 +3,7 @@ from pygame.locals import *
 
 from BlankField import *
 from base_sprite import BaseSprite
-from config import FieldConstants as fc, itera_id
+from config import FieldConstants as fc
 
 
 class Hero(pygame.sprite.Sprite, BaseSprite):
@@ -23,7 +23,7 @@ class Hero(pygame.sprite.Sprite, BaseSprite):
 
     def __init__(self, parX, parY):
 
-        self.id = self.get_id()
+        self.id = self.set_id()
 
         pygame.sprite.Sprite.__init__(self)
 
@@ -81,22 +81,15 @@ class Hero(pygame.sprite.Sprite, BaseSprite):
                 self.direct = 1
             elif keys[K_DOWN]:
                 self.direct = 3
+            else:
+                self.direct = 0
 
-        if self.cX % fc.SIZE_CELL == 0 and self.cY % fc.SIZE_CELL == 0 and self.direct != 0:  # можно ли начать двигаться в текущем  направлении
-            print(self.id)
+        if self.cX % fc.SIZE_CELL == 0 and self.cY % fc.SIZE_CELL == 0 and self.direct != 0:  # можно ли начать
+            # двигаться в текущем  направлении
 
-            can_move = True
-            for i in sp:
-                if self.cX1 == i.cX1 and self.cY1 + 1 == i.cY1 and self.direct == 3 and i.unitCod != 3:
-                    can_move = False
-                if self.cX1 + 1 == i.cX1 and self.cY1 == i.cY1 and self.direct == 2 and i.unitCod != 3:
-                    can_move = False
-                if self.cX1 - 1 == i.cX1 and self.cY1 == i.cY1 and self.direct == 4 and i.unitCod != 3:
-                    can_move = False
-                if self.cX1 == i.cX1 and self.cY1 - 1 == i.cY1 and self.direct == 1 and i.unitCod != 3:
-                    can_move = False
-
-            if can_move:
+            can_move = self.check_move(sp, self.cX1, self.cY1, self.direct)
+            print(can_move, self.cX1, self.cY1, self.direct)
+            if can_move == 0: # если пусто, то просто шагаем вперед
                 tmp = [[0, -1], [1, 0], [0, 1], [-1, 0]]  # для шага вперед
                 self.cX += self.speedX * tmp[self.direct - 1][0]
                 self.cY += self.speedY * tmp[self.direct - 1][1]
@@ -104,6 +97,22 @@ class Hero(pygame.sprite.Sprite, BaseSprite):
                 self.cY1 = self.cY // fc.SIZE_CELL
 
                 sp.add(BlankField(self.cX1 + tmp[self.direct - 1][0], self.cY1 + tmp[self.direct - 1][1]))
+            else:
+                forward_sprite=self.get_sprite_by_id(sp, can_move)
+                if forward_sprite.unitCod == 3:
+                    print("hero:",self.cX1)
+                    print("plane:", forward_sprite.cX1)
+                    print()
+                    tmp = [[0, -1], [1, 0], [0, 1], [-1, 0]]  # для шага вперед
+                    self.cX += self.speedX * tmp[self.direct - 1][0]
+                    self.cY += self.speedY * tmp[self.direct - 1][1]
+                    self.cX1 = self.cX // fc.SIZE_CELL
+                    self.cY1 = self.cY // fc.SIZE_CELL
+
+                    forward_sprite.kill()
+
+                    sp.add(BlankField(self.cX1 + tmp[self.direct - 1][0], self.cY1 + tmp[self.direct - 1][1]))
+
 
         else:
             if self.direct == 0:
@@ -121,7 +130,8 @@ class Hero(pygame.sprite.Sprite, BaseSprite):
         self.rect.x = self.cX
         self.rect.y = self.cY
         if self.cY % fc.SIZE_CELL == 0 and self.cX % fc.SIZE_CELL == 0:
-            self.direct = 0
+            #self.direct = 0
+            pass
 
         self.__imindex = 1 & (self.__imindex + 1)
         self.image = self.images[self.arrmove[self.direct][self.__imindex]]

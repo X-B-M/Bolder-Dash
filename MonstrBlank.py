@@ -26,7 +26,7 @@ class MonstrBlank(pygame.sprite.Sprite, BaseSprite):
 
     def __init__(self, parX, parY):
 
-        self.id = self.get_id()
+        self.id = self.set_id()
 
         pygame.sprite.Sprite.__init__(self)
         self.images = []
@@ -80,7 +80,7 @@ class MonstrBlank(pygame.sprite.Sprite, BaseSprite):
         # если удачно пршли вперед, то направление следующей попытки движения меняеи на следующее
         if self.cX % fc.SIZE_CELL == 0 and self.cY % fc.SIZE_CELL == 0:  # можно ли начать двигаться в текущем
             # направлении
-            print(self.id)
+
             self.direct = self.direct_list[0]
             exist_support = False  # если справа по направлению движения есть спрайт(опора), то двигаться можно
             # иначе - меняем напраление на следующее в массиве
