@@ -2,7 +2,7 @@ from BlankField import *
 from Explosiv import *
 from Diamond import *
 from config import FieldConstants as FC
-
+from base_sprite import BaseSprite
 
 class Stone(pygame.sprite.Sprite, BaseSprite):
     speedX = 5
@@ -98,60 +98,42 @@ class Stone(pygame.sprite.Sprite, BaseSprite):
                             sp.add(Diamond(i[0], i[1]))
                         else:
                             sp.add(Explosiv(i[0], i[1]))
-
+#        self.fallen_and_slippery(sp)
         if self.cX % FC.SIZE_CELL == 0 and self.cY % FC.SIZE_CELL == 0:  # можно ли начать двигаться в текущем  направлении
-            canMove = True
-            canMove23 = True
-            canMove43 = True
-            for i in sp:
-                if self.cX1 == i.cX1 and self.cY1 + 1 == i.cY1:
-                    canMove = False
-                    if not i.slippery:
-                        canMove23 = False
-                        canMove43 = False
-                if self.cX1 + 1 == i.cX1 and self.cY1 == i.cY1:  # не скользко или справа что=то есть
-                    canMove23 = False
-                if self.cX1 - 1 == i.cX1 and self.cY1 == i.cY1:  # не скользко или слева что=то есть
-                    canMove43 = False
-                if self.cX1 + 1 == i.cX1 and self.cY1 + 1 == i.cY1:  # справа-внизу что=то есть
-                    canMove23 = False
-                if self.cX1 - 1 == i.cX1 and self.cY1 + 1 == i.cY1:  # слева-внизу что=то есть
-                    canMove43 = False
 
-            if canMove:  # падаем вниз
+            can_move = self.check_move(sp, self.cX1, self.cY1, self.direct)
+
+            if can_move == 0 :  # падаем вниз
                 sp.add(BlankField(self.cX1, self.cY1 + 1))
                 self.cY += self.speedY
                 self.cY1 = self.cY // FC.SIZE_CELL
                 self.direct = 3
                 self.kinect_energy = 8
 
-            elif canMove23:  # соскальзываем вправо
-                sp.add(BlankField(self.cX1 + 1, self.cY1))
-                self.cX += self.speedX
-                self.cX1 = self.cX // FC.SIZE_CELL
+            else:  # соскальзываем вправо или влево
+                forward_sprite = self.get_sprite_by_id(sp, can_move)
+                if forward_sprite.slippery:
+                    can_move2 = self.check_move(sp, self.cX1, self.cY1, 2)
+                    can_move23 = self.check_move(sp, self.cX1+1, self.cY1, 3)
+                    if can_move2 == 0 and can_move23 == 0:
+                        sp.add(BlankField(self.cX1 + 1, self.cY1))
+                        sp.add(BlankField(self.cX1 + 1, self.cY1 + 1))
+                        self.cX += self.speedX
+                        self.cX1 = self.cX // FC.SIZE_CELL
+                        self.direct = 2
+                        self.kinect_energy = 8
+                    else:
+                        can_move4 = self.check_move(sp, self.cX1, self.cY1, 4)
+                        can_move43 = self.check_move(sp, self.cX1 - 1, self.cY1, 3)
+                        if can_move4 == 0 and can_move43 == 0:
+                            sp.add(BlankField(self.cX1 - 1, self.cY1))
+                            sp.add(BlankField(self.cX1 - 1, self.cY1+1))
+                            self.cX -= self.speedX
+                            self.cX1 = self.cX // FC.SIZE_CELL
+                            self.direct = 4
+                            self.kinect_energy = 8
 
-                if self.cX % FC.SIZE_CELL == 0:  # дошли вправо до конца ячейки, надо падать вниз
-                    self.direct = 3
-                else:
-                    self.direct = 2
-
-                self.kinect_energy = 8
-
-            elif canMove43:  # соскальзываем влево
-                sp.add(BlankField(self.cX1 - 1, self.cY1))
-                self.cX -= self.speedX
-                self.cX1 = self.cX // FC.SIZE_CELL
-
-                if self.cX % FC.SIZE_CELL == 0:  # дошли вправо до конца ячейки, надо падать вниз
-                    self.direct = 3
-                else:
-                    self.direct = 4
-
-                self.kinect_energy = 8
-
-            else:
-
-                self.kinect_energy -= 1
+            self.kinect_energy -= 1
         else:
             if self.direct == 3:  # вниз
                 self.cY += self.speedY

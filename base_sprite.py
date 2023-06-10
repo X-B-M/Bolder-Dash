@@ -29,7 +29,8 @@ class BaseSprite:
 
         return cm[convert_direct[cm_direct]]
 
-
+    def fallen_and_slippery(self):
+        pass
 '''    def get_sprite_env(sprite_lists, current_x, current_y) -> list[list]:
         for i in sprite_lists:
             if self.cX1 == i.cX1 and self.cY1 + 1 == i.cY1 and self.direct == 3 and i.unitCod != 3:

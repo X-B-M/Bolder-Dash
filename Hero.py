@@ -98,7 +98,7 @@ class Hero(pygame.sprite.Sprite, BaseSprite):
 
                 sp.add(BlankField(self.cX1 + tmp[self.direct - 1][0], self.cY1 + tmp[self.direct - 1][1]))
             else:
-                forward_sprite=self.get_sprite_by_id(sp, can_move)
+                forward_sprite = self.get_sprite_by_id(sp, can_move)
                 if forward_sprite.unitCod == 3:
                     tmp = [[0, -1], [1, 0], [0, 1], [-1, 0]]  # для шага вперед
                     self.cX += self.speedX * tmp[self.direct - 1][0]
