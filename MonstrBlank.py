@@ -1,11 +1,10 @@
 import pygame
 from pygame.locals import *
-from config import FieldConstants as fc
-
+from config import FieldConstants as fc, itera_id
 from BlankField import *
 
 
-class MonstrBlank(pygame.sprite.Sprite):
+class MonstrBlank(pygame.sprite.Sprite, BaseSprite):
     speedX = 5
     speedY = 5
     cY1 = 0
@@ -18,6 +17,8 @@ class MonstrBlank(pygame.sprite.Sprite):
     slippery = False  # скользкий, с него камни скатываются
     prev_status = 0  # информация о том, в прошлой итерции обект двигался (1,2,3,4)
     statusTimeLife = 0  # Время движения в заданном направлении
+    time_to_live = FC.LENGTH_OF_LIFE
+    speed_live = 0 #живет вечно до особого события
 
     def get_imindex(self):
         return self.__imindex
@@ -26,6 +27,9 @@ class MonstrBlank(pygame.sprite.Sprite):
         self.__imindex = value
 
     def __init__(self, parX, parY):
+
+        self.id = self.set_id()
+
         pygame.sprite.Sprite.__init__(self)
         self.images = []
         image = pygame.image.load('img/monstr_blank1.png').convert()
@@ -75,52 +79,7 @@ class MonstrBlank(pygame.sprite.Sprite):
         self.__imindex = 7 & (self.statusTimeLife // 4)
         self.image = self.images[self.__imindex]
 
-        # если удачно пршли вперед, то направление следующей попытки движения меняеи на следующее
-        if self.cX % fc.SIZE_CELL == 0 and self.cY % fc.SIZE_CELL == 0:  # можно ли начать двигаться в текущем
-            # направлении
-            self.direct = self.direct_list[0]
-            exist_support = False  # если справа по направлению движения есть спрайт(опора), то двигаться можно
-            # иначе - меняем напраление на следующее в массиве
-            tmp = [[1, 0], [0, 1], [-1, 0], [0, -1]]  # для поиска опоры
-            for i in sp:
-                if self.cX1 + tmp[self.direct - 1][0] == i.cX1 and self.cY1 + tmp[self.direct - 1][1] == i.cY1:
-                    exist_support = True
-                    break
-            if exist_support:  # если опора есть, то проверим, есть ли место для шага вперед
-                can_move = True
-                tmp = [[0, -1], [1, 0], [0, 1], [-1, 0]]  # для шага вперед
-                for i in sp:
-                    if self.cX1 + tmp[self.direct - 1][0] == i.cX1 and self.cY1 + tmp[self.direct - 1][1] == i.cY1:
-                        can_move = False
-                        break
-                if can_move:  # начинаем двигаться в текущем напрвалении
-                    self.cX += self.speedX * tmp[self.direct - 1][0]
-                    self.cY += self.speedY * tmp[self.direct - 1][1]
-                    self.cX1 = self.cX // fc.SIZE_CELL
-                    self.cY1 = self.cY // fc.SIZE_CELL
-
-                    sp.add(BlankField(self.cX1 + tmp[self.direct - 1][0], self.cY1 + tmp[self.direct - 1][1]))
-
-                else:  # места для шага вперед нет, меняем направление
-                    self.direct_list = [self.direct_list[-1], *self.direct_list[0:3]]
-
-            else:  # опоры нет, поворачиваем в ту сторону и идем вперед
-                self.direct_list = [*self.direct_list[1:], self.direct_list[0]]
-                self.direct = self.direct_list[0]
-                tmp = [[0, -1], [1, 0], [0, 1], [-1, 0]]  # для шага вперед
-                self.cX += self.speedX * tmp[self.direct - 1][0]
-                self.cY += self.speedY * tmp[self.direct - 1][1]
-                self.cX1 = self.cX // fc.SIZE_CELL
-                self.cY1 = self.cY // fc.SIZE_CELL
-
-                sp.add(BlankField(self.cX1+tmp[self.direct - 1][0], self.cY1+tmp[self.direct - 1][1]))
-
-        else:  # завершаем движение в клетке
-            tmp = [[0, -1], [1, 0], [0, 1], [-1, 0]]  # для шага вперед
-            self.cX += self.speedX * tmp[self.direct - 1][0]
-            self.cY += self.speedY * tmp[self.direct - 1][1]
-            self.cX1 = self.cX // fc.SIZE_CELL
-            self.cY1 = self.cY // fc.SIZE_CELL
+        self.monster_move(sp, self)
 
         self.rect.x = self.cX
         self.rect.y = self.cY

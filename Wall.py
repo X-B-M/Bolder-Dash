@@ -1,14 +1,19 @@
 import pygame
 from pygame.locals import *
-from config import FieldConstants as FC
 
-class Wall(pygame.sprite.Sprite):
+from base_sprite import BaseSprite
+from config import FieldConstants as FC, itera_id
+
+
+class Wall(pygame.sprite.Sprite, BaseSprite):
     speedX = 0
     speedY = 0
     speed = 0
     status = 0
     statusTimeLife = 0  # Время движения в заданном направлении
     slippery = False  # не скользкий, с него камни не скатываются
+    time_to_live = FC.LENGTH_OF_LIFE
+    speed_live = 0 #живет вечно до особого события
 
     def get_imindex(self):
         return self.__imindex
@@ -17,6 +22,9 @@ class Wall(pygame.sprite.Sprite):
         self.__imindex = value
 
     def __init__(self, parX, parY, typeOfWall=1):
+
+        self.id = self.set_id()
+
         pygame.sprite.Sprite.__init__(self)
         self.images = []
         image = pygame.image.load('img/wall_steel.png').convert()
