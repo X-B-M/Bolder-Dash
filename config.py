@@ -3,6 +3,7 @@ class FieldConstants:
     SIZEFIELD_X = 35
     SIZEFIELD_Y = 19
     CNT_MAX_SPRITE = 2000
+    LENGTH_OF_LIFE = 40
 
 
 def set_sprite_id() -> int:

@@ -1,11 +1,12 @@
 import pygame
 
 from base_sprite import BaseSprite
+
 from config import FieldConstants as FC
 
 
 class BlankField(pygame.sprite.Sprite, BaseSprite):
-    time_to_live = FC.SIZE_CELL
+    time_to_live = FC.LENGTH_OF_LIFE
     speed_live = 5
     slippery = False  # не скользкий, с него камни не скатываются
 

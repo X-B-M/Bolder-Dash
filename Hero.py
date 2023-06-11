@@ -3,7 +3,7 @@ from pygame.locals import *
 
 from BlankField import *
 from base_sprite import BaseSprite
-from config import FieldConstants as fc
+from config import FieldConstants as FC
 
 
 class Hero(pygame.sprite.Sprite, BaseSprite):
@@ -20,6 +20,8 @@ class Hero(pygame.sprite.Sprite, BaseSprite):
     speedX = 5
     speedY = 5
     slippery = False
+    time_to_live = FC.LENGTH_OF_LIFE
+    speed_live = 0 #живет вечно до особого события
 
     def __init__(self, parX, parY):
 
@@ -60,18 +62,18 @@ class Hero(pygame.sprite.Sprite, BaseSprite):
 
         self.image = self.images[self.arrmove[self.direct][self.__imindex]]
         self.rect = image.get_rect()
-        self.cX = parX * fc.SIZE_CELL
-        self.cY = parY * fc.SIZE_CELL
+        self.cX = parX * FC.SIZE_CELL
+        self.cY = parY * FC.SIZE_CELL
 
-        self.cX1 = self.cX // fc.SIZE_CELL
-        self.cY1 = self.cY // fc.SIZE_CELL
+        self.cX1 = self.cX // FC.SIZE_CELL
+        self.cY1 = self.cY // FC.SIZE_CELL
 
         self.cX2 = self.cX1
         self.cY2 = self.cY1
 
     def update(self, sp):
 
-        if self.cX % fc.SIZE_CELL == 0 and self.cY % fc.SIZE_CELL == 0:
+        if self.cX % FC.SIZE_CELL == 0 and self.cY % FC.SIZE_CELL == 0:
             keys = pygame.key.get_pressed()
             if keys[K_LEFT]:
                 self.direct = 4
@@ -84,7 +86,7 @@ class Hero(pygame.sprite.Sprite, BaseSprite):
             else:
                 self.direct = 0
 
-        if self.cX % fc.SIZE_CELL == 0 and self.cY % fc.SIZE_CELL == 0 and self.direct != 0:  # можно ли начать
+        if self.cX % FC.SIZE_CELL == 0 and self.cY % FC.SIZE_CELL == 0 and self.direct != 0:  # можно ли начать
             # двигаться в текущем  направлении
 
             can_move = self.check_move(sp, self.cX1, self.cY1, self.direct)
@@ -93,8 +95,8 @@ class Hero(pygame.sprite.Sprite, BaseSprite):
                 tmp = [[0, -1], [1, 0], [0, 1], [-1, 0]]  # для шага вперед
                 self.cX += self.speedX * tmp[self.direct - 1][0]
                 self.cY += self.speedY * tmp[self.direct - 1][1]
-                self.cX1 = self.cX // fc.SIZE_CELL
-                self.cY1 = self.cY // fc.SIZE_CELL
+                self.cX1 = self.cX // FC.SIZE_CELL
+                self.cY1 = self.cY // FC.SIZE_CELL
 
                 sp.add(BlankField(self.cX1 + tmp[self.direct - 1][0], self.cY1 + tmp[self.direct - 1][1]))
             else:
@@ -103,30 +105,39 @@ class Hero(pygame.sprite.Sprite, BaseSprite):
                     tmp = [[0, -1], [1, 0], [0, 1], [-1, 0]]  # для шага вперед
                     self.cX += self.speedX * tmp[self.direct - 1][0]
                     self.cY += self.speedY * tmp[self.direct - 1][1]
-                    self.cX1 = self.cX // fc.SIZE_CELL
-                    self.cY1 = self.cY // fc.SIZE_CELL
+                    self.cX1 = self.cX // FC.SIZE_CELL
+                    self.cY1 = self.cY // FC.SIZE_CELL
+
+                    forward_sprite.kill()
+
+                    sp.add(BlankField(self.cX1 + tmp[self.direct - 1][0], self.cY1 + tmp[self.direct - 1][1]))
+                elif forward_sprite.unitCod == 5:
+                    tmp = [[0, -1], [1, 0], [0, 1], [-1, 0]]  # для шага вперед
+                    self.cX += self.speedX * tmp[self.direct - 1][0]
+                    self.cY += self.speedY * tmp[self.direct - 1][1]
+                    self.cX1 = self.cX // FC.SIZE_CELL
+                    self.cY1 = self.cY // FC.SIZE_CELL
 
                     forward_sprite.kill()
 
                     sp.add(BlankField(self.cX1 + tmp[self.direct - 1][0], self.cY1 + tmp[self.direct - 1][1]))
 
-
         else:
             if self.direct == 0:
-                self.cX1 = self.cX // fc.SIZE_CELL
-                self.cY1 = self.cY // fc.SIZE_CELL
-                self.cX = self.cX1 * fc.SIZE_CELL
-                self.cY = self.cY1 * fc.SIZE_CELL
+                self.cX1 = self.cX // FC.SIZE_CELL
+                self.cY1 = self.cY // FC.SIZE_CELL
+                self.cX = self.cX1 * FC.SIZE_CELL
+                self.cY = self.cY1 * FC.SIZE_CELL
             else:
                 tmp = [[0, -1], [1, 0], [0, 1], [-1, 0]]  # для шага вперед
                 self.cX += self.speedX * tmp[self.direct - 1][0]
                 self.cY += self.speedY * tmp[self.direct - 1][1]
-                self.cX1 = self.cX // fc.SIZE_CELL
-                self.cY1 = self.cY // fc.SIZE_CELL
+                self.cX1 = self.cX // FC.SIZE_CELL
+                self.cY1 = self.cY // FC.SIZE_CELL
 
         self.rect.x = self.cX
         self.rect.y = self.cY
-        if self.cY % fc.SIZE_CELL == 0 and self.cX % fc.SIZE_CELL == 0:
+        if self.cY % FC.SIZE_CELL == 0 and self.cX % FC.SIZE_CELL == 0:
             #self.direct = 0
             pass
 

@@ -12,6 +12,8 @@ class Wall(pygame.sprite.Sprite, BaseSprite):
     status = 0
     statusTimeLife = 0  # Время движения в заданном направлении
     slippery = False  # не скользкий, с него камни не скатываются
+    time_to_live = FC.LENGTH_OF_LIFE
+    speed_live = 0 #живет вечно до особого события
 
     def get_imindex(self):
         return self.__imindex
