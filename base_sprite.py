@@ -79,15 +79,28 @@ class BaseSprite:
 
             can_move = current_sprite.check_move(sprites_list, current_sprite.cX1, current_sprite.cY1, current_sprite.direct)
 
-            if can_move == 0 :  # падаем вниз
-
+            if can_move == 0 and current_sprite.direct == 3 :  # падаем вниз
                 sprites_list.add(BlankField(current_sprite.cX1, current_sprite.cY1 + 1))
                 current_sprite.cY += current_sprite.speedY
                 current_sprite.cY1 = current_sprite.cY // FC.SIZE_CELL
                 current_sprite.direct = 3
                 current_sprite.kinect_energy = 8
 
-            else:  # соскальзываем вправо или влево
+            elif can_move == 0 and current_sprite.direct == 2 :  # толкают вправо
+                sprites_list.add(BlankField(current_sprite.cX1+1, current_sprite.cY1))
+                current_sprite.cX += current_sprite.speedX
+                current_sprite.cX1 = current_sprite.cX // FC.SIZE_CELL
+                current_sprite.direct = 2
+                current_sprite.kinect_energy = 8
+
+            elif can_move == 0 and current_sprite.direct == 4 :  # толкают влево
+                sprites_list.add(BlankField(current_sprite.cX1-1, current_sprite.cY1))
+                current_sprite.cX -= current_sprite.speedX
+                current_sprite.cX1 = current_sprite.cX // FC.SIZE_CELL
+                current_sprite.direct = 4
+                current_sprite.kinect_energy = 8
+
+            else:  # пробуем соскальзнуть вправо или влево
                 forward_sprite = current_sprite.get_sprite_by_id(sprites_list, can_move)
                 if forward_sprite.slippery:
                     can_move2 = current_sprite.check_move(sprites_list, current_sprite.cX1, current_sprite.cY1, 2)
@@ -193,7 +206,81 @@ class BaseSprite:
             current_sprite.cY1 = current_sprite.cY // FC.SIZE_CELL
 
 
+    @staticmethod
+    def hero_move(sprites_list, current_sprite):
+        from BlankField import BlankField
 
+        if current_sprite.cX % FC.SIZE_CELL == 0 and current_sprite.cY % FC.SIZE_CELL == 0 and current_sprite.direct != 0:  # можно ли начать
+            # двигаться в текущем  направлении
+
+            can_move = current_sprite.check_move(sprites_list, current_sprite.cX1, current_sprite.cY1, current_sprite.direct)
+
+            if can_move == 0: # если пусто, то просто шагаем вперед
+                tmp = [[0, -1], [1, 0], [0, 1], [-1, 0]]  # для шага вперед
+                current_sprite.cX += current_sprite.speedX * tmp[current_sprite.direct - 1][0]
+                current_sprite.cY += current_sprite.speedY * tmp[current_sprite.direct - 1][1]
+                current_sprite.cX1 = current_sprite.cX // FC.SIZE_CELL
+                current_sprite.cY1 = current_sprite.cY // FC.SIZE_CELL
+
+                sprites_list.add(BlankField(current_sprite.cX1 + tmp[current_sprite.direct - 1][0], current_sprite.cY1 + tmp[current_sprite.direct - 1][1]))
+            else:
+                forward_sprite = current_sprite.get_sprite_by_id(sprites_list, can_move)
+                if forward_sprite.unitCod == 3: # съедаем квант поля
+                    tmp = [[0, -1], [1, 0], [0, 1], [-1, 0]]  # для шага вперед
+                    current_sprite.cX += current_sprite.speedX * tmp[current_sprite.direct - 1][0]
+                    current_sprite.cY += current_sprite.speedY * tmp[current_sprite.direct - 1][1]
+                    current_sprite.cX1 = current_sprite.cX // FC.SIZE_CELL
+                    current_sprite.cY1 = current_sprite.cY // FC.SIZE_CELL
+
+                    forward_sprite.kill()
+
+                    sprites_list.add(BlankField(current_sprite.cX1 + tmp[current_sprite.direct - 1][0], current_sprite.cY1 + tmp[current_sprite.direct - 1][1]))
+                elif forward_sprite.unitCod == 5: # съедаем алмаз
+                    tmp = [[0, -1], [1, 0], [0, 1], [-1, 0]]  # для шага вперед
+                    current_sprite.cX += current_sprite.speedX * tmp[current_sprite.direct - 1][0]
+                    current_sprite.cY += current_sprite.speedY * tmp[current_sprite.direct - 1][1]
+                    current_sprite.cX1 = current_sprite.cX // FC.SIZE_CELL
+                    current_sprite.cY1 = current_sprite.cY // FC.SIZE_CELL
+
+                    forward_sprite.kill()
+
+                    sprites_list.add(BlankField(current_sprite.cX1 + tmp[current_sprite.direct - 1][0], current_sprite.cY1 + tmp[current_sprite.direct - 1][1]))
+
+                elif forward_sprite.unitCod == 4: # толкаем камень
+                    if current_sprite.direct in [2, 4]:
+                        current_sprite.pushed_stone+= current_sprite.force_pushed_stone
+                    else:
+                        current_sprite.pushed_stone = 0  # обнуляем усилия по толканию камня
+
+                    if current_sprite.pushed_stone>= FC.SIZE_CELL and  current_sprite.direct == 2:
+                        # придаем камню справа имульс движения вправо
+                        forward_sprite.direct = 2
+
+                        pass
+                    elif current_sprite.pushed_stone>= FC.SIZE_CELL and current_sprite.direct == 4:
+                        # придаем камню слева имульс движения влево
+                        forward_sprite.direct = 4
+                        pass
+        else:
+            current_sprite.pushed_stone = 0 # обнуляем усилия по толканию камня
+
+            if current_sprite.direct == 0:
+                current_sprite.cX1 = current_sprite.cX // FC.SIZE_CELL
+                current_sprite.cY1 = current_sprite.cY // FC.SIZE_CELL
+                current_sprite.cX = current_sprite.cX1 * FC.SIZE_CELL
+                current_sprite.cY = current_sprite.cY1 * FC.SIZE_CELL
+            else:
+                tmp = [[0, -1], [1, 0], [0, 1], [-1, 0]]  # для шага вперед
+                current_sprite.cX += current_sprite.speedX * tmp[current_sprite.direct - 1][0]
+                current_sprite.cY += current_sprite.speedY * tmp[current_sprite.direct - 1][1]
+                current_sprite.cX1 = current_sprite.cX // FC.SIZE_CELL
+                current_sprite.cY1 = current_sprite.cY // FC.SIZE_CELL
+
+        current_sprite.rect.x = current_sprite.cX
+        current_sprite.rect.y = current_sprite.cY
+        if current_sprite.cY % FC.SIZE_CELL == 0 and current_sprite.cX % FC.SIZE_CELL == 0:
+            #current_sprite.direct = 0
+            pass
 '''    def get_sprite_env(sprite_lists, current_x, current_y) -> list[list]:
         for i in sprite_lists:
             if self.cX1 == i.cX1 and self.cY1 + 1 == i.cY1 and self.direct == 3 and i.unitCod != 3:
