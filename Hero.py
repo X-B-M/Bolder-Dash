@@ -78,7 +78,19 @@ class Hero(pygame.sprite.Sprite, BaseSprite):
         if self.cX % FC.SIZE_CELL == 0 and self.cY % FC.SIZE_CELL == 0:
 
             keys = pygame.key.get_pressed()
-            if keys[K_LEFT]:
+            if keys[pygame.K_RIGHT] and keys[K_SPACE]:
+                # копаем справа
+                self.dig_plane(self, sp, 2)
+            elif keys[pygame.K_LEFT] and keys[K_SPACE]:
+                # копаем слева
+                self.dig_plane(self, sp, 4)
+            elif keys[pygame.K_UP] and keys[K_SPACE]:
+                # копаем вверх
+                self.dig_plane(self, sp, 1)
+            elif keys[pygame.K_DOWN] and keys[K_SPACE]:
+                # копаем вниз
+                self.dig_plane(self, sp, 3)
+            elif keys[K_LEFT]:
                 self.direct = 4
             elif keys[K_RIGHT]:
                 self.direct = 2
@@ -86,6 +98,7 @@ class Hero(pygame.sprite.Sprite, BaseSprite):
                 self.direct = 1
             elif keys[K_DOWN]:
                 self.direct = 3
+
             else:
                 self.direct = 0
 

@@ -305,3 +305,15 @@ class BaseSprite:
 
         current_sprite.rect.x = current_sprite.cX
         current_sprite.rect.y = current_sprite.cY
+
+    @staticmethod
+    def dig_plane(current_sprite, sprites_list, direct_dig):
+        from BlankField import BlankField
+        can_dig = current_sprite.check_move(sprites_list, current_sprite.cX1, current_sprite.cY1, direct_dig)
+        if can_dig >0:
+            forward_sprite = current_sprite.get_sprite_by_id(sprites_list, can_dig)
+            if forward_sprite.unitCod == 3:  # съедаем квант поля
+                tmp = [[0, -1], [1, 0], [0, 1], [-1, 0]]  # для шага вперед
+                forward_sprite.kill()
+                sprites_list.add(BlankField(current_sprite.cX1 + tmp[direct_dig - 1][0],
+                                            current_sprite.cY1 + tmp[direct_dig - 1][1],FC.LENGTH_OF_LIFE*2))
