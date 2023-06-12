@@ -149,6 +149,7 @@ class Game_location(Location):
 
         self.window.blit(self.background, (0, 0))
         self.game_units.update(self.game_units)
+
         self.game_units.draw(self.window)
 
 
@@ -166,6 +167,7 @@ while 1:
     for event in pygame.event.get():
         general.location.event(event)
         general.event(event)
+
     general.location.draw()
     pygame.display.flip()
     clock.tick(30)

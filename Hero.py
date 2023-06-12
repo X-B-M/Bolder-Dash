@@ -22,6 +22,9 @@ class Hero(pygame.sprite.Sprite, BaseSprite):
     slippery = False
     pushed_stone = 0
     force_pushed_stone = 5
+    collected_diamonds =0
+    collected_diamonds_prev = 0
+
     def __init__(self, parX, parY):
 
         self.id = self.set_id()
@@ -86,6 +89,10 @@ class Hero(pygame.sprite.Sprite, BaseSprite):
                 self.direct = 0
 
         self.hero_move(sp, self)
+
+        if self.collected_diamonds != self.collected_diamonds_prev:
+            self.collected_diamonds_prev = self.collected_diamonds
+            pygame.display.set_caption('Алмазов собрано: ' + str(self.collected_diamonds))
 
         self.__imindex = 1 & (self.__imindex + 1)
         self.image = self.images[self.arrmove[self.direct][self.__imindex]]

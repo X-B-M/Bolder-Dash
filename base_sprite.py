@@ -1,8 +1,10 @@
 from config import FieldConstants as FC
 from config import itera_id
 
+GAME_CAPTION ='======'
 
 class BaseSprite:
+    global GAME_CAPTION
     @staticmethod
     def set_id():
         return itera_id.__next__()
@@ -12,6 +14,49 @@ class BaseSprite:
         for i in sp:
             if i.id == par_id:
                 return i
+
+    @staticmethod
+    def explosiv_sprite(sprites_list, par_id):
+        not_append = []
+        cur_spr = BaseSprite.get_sprite_by_id(sprites_list, par_id)
+        area_of_explosive = [[cur_spr.cX1 - 1, cur_spr.cY1 - 1], [cur_spr.cX1, cur_spr.cY1 - 1], [cur_spr.cX1 + 1, cur_spr.cY1 - 1],
+                             [cur_spr.cX1 - 1, cur_spr.cY1], [cur_spr.cX1, cur_spr.cY1], [cur_spr.cX1 + 1, cur_spr.cY1],
+                             [cur_spr.cX1 - 1, cur_spr.cY1 + 1], [cur_spr.cX1, cur_spr.cY1 + 1], [cur_spr.cX1 + 1, cur_spr.cY1 + 1]]
+        for i in sprites_list:  # уничтожаем все вокруг центра взрыва
+            if i.cX1 >= cur_spr.cX1 - 1 and i.cX1 <= cur_spr.cX1 + 1:
+                if i.cY1 >= cur_spr.cY1 - 1 and i.cY1 <= cur_spr.cY1 + 1:
+                    if i.unitCod != 1 and i.unitCod != 0:
+                        i.kill()
+                    else:
+                        if cur_spr.cX1 == i.cX1 and cur_spr.cY1 == i.cY1:
+                            pass  # центр ызрыва всегда уничтожается
+                        else:
+                            not_append.append([i.cX1, i.cY1])
+
+        for i in area_of_explosive:
+            if i not in not_append:
+                if cur_spr.unitCod in [7, 8]:  # получаем алмазы
+                    from Diamond import Diamond
+                    sprites_list.add(Diamond(i[0], i[1]))
+                else:
+                    from Explosiv import Explosiv
+                    sprites_list.add(Explosiv(i[0], i[1]))
+
+    @staticmethod
+    def danger_place(sp, x, y ) -> int:
+        cm = [0, 0, 0,
+              0, 0, 0,
+              0, 0, 0]
+        tmp = [[-1, -1], [0, -1], [+1, -1],
+               [-1, 0], [0, 0], [+1, 0],
+               [-1, +1], [0, +1], [+1, +1]]
+        # direct=[41, up 1, 12, left 2, 23, down 3, 34, right 4, stop 0]
+        convert_direct = [4, 1, 5, 7, 3]
+        for i in sp:
+            for j in range(0, 9):
+                if x + tmp[j][0] == i.cX1 and y + tmp[j][1] == i.cY1 and i.unitCod == 8:
+                    return i.id
+        return -1
 
     @staticmethod
     def check_move(sp, x, y, cm_direct) ->int:
@@ -42,38 +87,8 @@ class BaseSprite:
                     #if current_sprite.cX1 == i.cX1 and current_sprite.cY > i.cY - FC.SIZE_CELL and current_sprite.cY1 < i.cY1:
                     if current_sprite.cX1 == i.cX1 and current_sprite.cY1 +1 == i.cY1:
                         # цель найдена, взрываем
-                        flag_kill.append(i.cX1)
-                        flag_kill.append(i.cY1)
-                        flag_kill.append(i.unitCod)
+                        BaseSprite.explosiv_sprite(sprites_list, i.id)
                         break
-                        # i.kill()
-                        # self.kill()
-
-            if len(flag_kill) > 0:
-                not_append = []
-                area_of_explosive = [[i.cX1 - 1, i.cY1 - 1], [i.cX1, i.cY1 - 1], [i.cX1 + 1, i.cY1 - 1],
-                               [i.cX1 - 1, i.cY1], [i.cX1, i.cY1], [i.cX1 + 1, i.cY1],
-                               [i.cX1 - 1, i.cY1 + 1], [i.cX1, i.cY1 + 1], [i.cX1 + 1, i.cY1 + 1]]
-                for i in sprites_list:  # уничтожаем все вокруг центра взрыва
-                    if i.cX1 >= flag_kill[0] - 1 and i.cX1 <= flag_kill[0] + 1:
-                        if i.cY1 >= flag_kill[1] - 1 and i.cY1 <= flag_kill[1] + 1:
-                            if i.unitCod != 1 and i.unitCod != 0:
-                                i.kill()
-                            else:
-                                if current_sprite.cX1 == i.cX1 and current_sprite.cY1 == i.cY1:
-                                    pass # центр ызрыва всегда уничтожается
-                                else:
-                                    not_append.append([i.cX1, i.cY1])
-
-                for i in area_of_explosive:
-                    if i not in not_append:
-                        a = 0
-                        if flag_kill[2] in [7, 8]:  # получаем алмазы
-                            from Diamond import Diamond
-                            sprites_list.add(Diamond(i[0], i[1]))
-                        else:
-                            from Explosiv import Explosiv
-                            sprites_list.add(Explosiv(i[0], i[1]))
 
         if current_sprite.cX % FC.SIZE_CELL == 0 and current_sprite.cY % FC.SIZE_CELL == 0:  # можно ли начать двигаться в текущем  направлении
 
@@ -158,6 +173,11 @@ class BaseSprite:
 
         # если удачно пршли вперед, то направление следующей попытки движения меняеи на следующее
         if current_sprite.cX % FC.SIZE_CELL == 0 and current_sprite.cY % FC.SIZE_CELL == 0:  # можно ли начать двигаться в текущем  направлении
+
+            tmp = BaseSprite.danger_place(sprites_list, current_sprite.cX1, current_sprite.cY1)
+            if tmp>0:
+                BaseSprite.explosiv_sprite(sprites_list, tmp)
+
             current_sprite.direct = current_sprite.direct_list[0]
             exist_support = False  # если справа по направлению движения есть спрайт(опора), то двигаться можно
             # иначе - меняем напраление на следующее в массиве
@@ -208,6 +228,8 @@ class BaseSprite:
 
     @staticmethod
     def hero_move(sprites_list, current_sprite):
+        global GAME_CAPTION
+
         from BlankField import BlankField
 
         if current_sprite.cX % FC.SIZE_CELL == 0 and current_sprite.cY % FC.SIZE_CELL == 0 and current_sprite.direct != 0:  # можно ли начать
@@ -241,6 +263,8 @@ class BaseSprite:
                     current_sprite.cY += current_sprite.speedY * tmp[current_sprite.direct - 1][1]
                     current_sprite.cX1 = current_sprite.cX // FC.SIZE_CELL
                     current_sprite.cY1 = current_sprite.cY // FC.SIZE_CELL
+
+                    current_sprite.collected_diamonds +=1
 
                     forward_sprite.kill()
 
@@ -278,20 +302,3 @@ class BaseSprite:
 
         current_sprite.rect.x = current_sprite.cX
         current_sprite.rect.y = current_sprite.cY
-        if current_sprite.cY % FC.SIZE_CELL == 0 and current_sprite.cX % FC.SIZE_CELL == 0:
-            #current_sprite.direct = 0
-            pass
-'''    def get_sprite_env(sprite_lists, current_x, current_y) -> list[list]:
-        for i in sprite_lists:
-            if self.cX1 == i.cX1 and self.cY1 + 1 == i.cY1 and self.direct == 3 and i.unitCod != 3:
-                can_move = False
-            if self.cX1 + 1 == i.cX1 and self.cY1 == i.cY1 and self.direct == 2 and i.unitCod != 3:
-                can_move = False
-            if self.cX1 - 1 == i.cX1 and self.cY1 == i.cY1 and self.direct == 4 and i.unitCod != 3:
-                can_move = False
-            if self.cX1 == i.cX1 and self.cY1 - 1 == i.cY1 and self.direct == 1 and i.unitCod != 3:
-                can_move = False
-        a = [[]]
-        pass
-        return a
-'''
