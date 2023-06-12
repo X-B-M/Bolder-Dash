@@ -79,7 +79,7 @@ class MonstrBlank(pygame.sprite.Sprite, BaseSprite):
         self.__imindex = 7 & (self.statusTimeLife // 4)
         self.image = self.images[self.__imindex]
 
-        self.monster_move(sp, self)
+        self.monster_move(self, sp)
 
         self.rect.x = self.cX
         self.rect.y = self.cY

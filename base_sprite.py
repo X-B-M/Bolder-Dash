@@ -47,9 +47,13 @@ class BaseSprite:
         cm = [0, 0, 0,
               0, 0, 0,
               0, 0, 0]
-        tmp = [[-1, -1], [0, -1], [+1, -1],
+#        tmp = [[-1, -1], [0, -1], [+1, -1],
+#               [-1, 0], [0, 0], [+1, 0],
+#               [-1, +1], [0, +1], [+1, +1]]
+        tmp = [[0, 0], [0, -1], [0, 0],
                [-1, 0], [0, 0], [+1, 0],
-               [-1, +1], [0, +1], [+1, +1]]
+               [0, 0], [0, +1], [0, 0]]
+
         # direct=[41, up 1, 12, left 2, 23, down 3, 34, right 4, stop 0]
         convert_direct = [4, 1, 5, 7, 3]
         for i in sp:
@@ -76,7 +80,7 @@ class BaseSprite:
         return cm[convert_direct[cm_direct]]
 
     @staticmethod
-    def fall_and_slippery(sprites_list, current_sprite):
+    def fall_and_slippery(current_sprite, sprites_list):
         from BlankField import BlankField
 
         if current_sprite.kinect_energy > 0 and current_sprite.direct == 3:
@@ -168,7 +172,7 @@ class BaseSprite:
         current_sprite.rect.y = current_sprite.cY
 
     @staticmethod
-    def monster_move(sprites_list, current_sprite):
+    def monster_move(current_sprite, sprites_list):
         from BlankField import BlankField
 
         # если удачно пршли вперед, то направление следующей попытки движения меняеи на следующее
@@ -227,8 +231,7 @@ class BaseSprite:
 
 
     @staticmethod
-    def hero_move(sprites_list, current_sprite):
-        global GAME_CAPTION
+    def hero_move(current_sprite, sprites_list):
 
         from BlankField import BlankField
 

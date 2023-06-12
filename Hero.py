@@ -76,6 +76,7 @@ class Hero(pygame.sprite.Sprite, BaseSprite):
     def update(self, sp):
 
         if self.cX % FC.SIZE_CELL == 0 and self.cY % FC.SIZE_CELL == 0:
+
             keys = pygame.key.get_pressed()
             if keys[K_LEFT]:
                 self.direct = 4
@@ -88,7 +89,7 @@ class Hero(pygame.sprite.Sprite, BaseSprite):
             else:
                 self.direct = 0
 
-        self.hero_move(sp, self)
+        self.hero_move(self, sp)
 
         if self.collected_diamonds != self.collected_diamonds_prev:
             self.collected_diamonds_prev = self.collected_diamonds

@@ -5,9 +5,6 @@ from base_sprite import BaseSprite
 
 class Plane(pygame.sprite.Sprite, BaseSprite):
     slippery = False  # не скользкий, с него камни не скатываются
-    #time_to_live = FC.LENGTH_OF_LIFE
-    #speed_live = 0 #живет вечно до особого события
-
 
     def get_imindex(self): return self.__imindex
 
@@ -38,6 +35,7 @@ class Plane(pygame.sprite.Sprite, BaseSprite):
         self.unitCod = 3
 
     def update(self, sp):
+
         self.rect.x = self.cX
         self.rect.y = self.cY
 

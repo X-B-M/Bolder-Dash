@@ -115,7 +115,6 @@ class Game_location(Location):
         big_surf = pygame.transform.scale(big_surf, self.window.get_size())
         #        pygame.image.save(big_surf, 'day1.png')
         self.background = big_surf
-
         self.game_units = pygame.sprite.Group()
         f = open('map.txt', 'r')
         tY = 0
@@ -138,18 +137,17 @@ class Game_location(Location):
                     self.game_units.add(MonstrDiamond(tX, tY))
                 elif l1 == "8":
                     self.game_units.add(Hero(tX, tY))
-
                 #  else:
                 #     self.game_units.add(BlankField(tX,tY))
                 tX += 1
             tY += 1
+
         f.close()#        keys = pygame.key.get_pressed()
 
     def draw(self):
 
         self.window.blit(self.background, (0, 0))
         self.game_units.update(self.game_units)
-
         self.game_units.draw(self.window)
 
 

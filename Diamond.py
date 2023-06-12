@@ -72,14 +72,13 @@ class Diamond(pygame.sprite.Sprite, BaseSprite):
 
         if self.statusTimeLife <= 0:
             self.statusTimeLife = 13
-
         else:
             self.statusTimeLife -= 1
 
         self.__imindex = 7 & (self.statusTimeLife // 4)
         self.image = self.images[self.__imindex]
 
-        self.fall_and_slippery(sp, self)
+        self.fall_and_slippery(self, sp)
 
     def draw(self, window):
         window.blit(self.image(self.cX, self.cY))
