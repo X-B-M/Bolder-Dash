@@ -89,7 +89,7 @@ class BaseSprite:
             for i in sprites_list:
                 if i.unitCod in [6, 7, 8]:
                     #if current_sprite.cX1 == i.cX1 and current_sprite.cY > i.cY - FC.SIZE_CELL and current_sprite.cY1 < i.cY1:
-                    if current_sprite.cX1 == i.cX1 and current_sprite.cY1 + 1 in [i.cY1,i.cY1-1]:
+                    if current_sprite.cX1 == i.cX1 and current_sprite.cY1 in [i.cY1, i.cY1-1]:
                         # цель найдена, взрываем
                         BaseSprite.explosiv_sprite(sprites_list, i.id)
                         break
