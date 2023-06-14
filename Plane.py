@@ -33,13 +33,12 @@ class Plane(pygame.sprite.Sprite, BaseSprite):
         self.cY2 = (self.cY + 39) // fc.SIZE_CELL
         self.unitName = "plane"
         self.unitCod = 3
-
-    def update(self, sp):
-
         self.rect.x = self.cX
         self.rect.y = self.cY
 
+    def update(self, sp):
         # self.image = self.images[self.__imindex]
+        pass
 
     def draw(self, window):
         window.blit(self.image, (self.cX, self.cY))

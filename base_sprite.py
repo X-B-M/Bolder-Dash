@@ -25,7 +25,7 @@ class BaseSprite:
         for i in sprites_list:  # уничтожаем все вокруг центра взрыва
             if i.cX1 >= cur_spr.cX1 - 1 and i.cX1 <= cur_spr.cX1 + 1:
                 if i.cY1 >= cur_spr.cY1 - 1 and i.cY1 <= cur_spr.cY1 + 1:
-                    if i.unitCod != 1 and i.unitCod != 0:
+                    if i.unitCod != 1 and i.unitCod != 0 and i.unitCod != 9:
                         i.kill()
                     else:
                         if cur_spr.cX1 == i.cX1 and cur_spr.cY1 == i.cY1:
@@ -89,7 +89,7 @@ class BaseSprite:
             for i in sprites_list:
                 if i.unitCod in [6, 7, 8]:
                     #if current_sprite.cX1 == i.cX1 and current_sprite.cY > i.cY - FC.SIZE_CELL and current_sprite.cY1 < i.cY1:
-                    if current_sprite.cX1 == i.cX1 and current_sprite.cY1 +1 == i.cY1:
+                    if current_sprite.cX1 == i.cX1 and current_sprite.cY1 + 1 in [i.cY1,i.cY1-1]:
                         # цель найдена, взрываем
                         BaseSprite.explosiv_sprite(sprites_list, i.id)
                         break
@@ -238,6 +238,10 @@ class BaseSprite:
         if current_sprite.cX % FC.SIZE_CELL == 0 and current_sprite.cY % FC.SIZE_CELL == 0 and current_sprite.direct != 0:  # можно ли начать
             # двигаться в текущем  направлении
 
+            if  current_sprite.finished_X1 == current_sprite.cX1 and current_sprite.finished_Y1 == current_sprite.cY1 :
+                # зашли в открытую дверь, покидаем уровень
+                return
+
             can_move = current_sprite.check_move(sprites_list, current_sprite.cX1, current_sprite.cY1, current_sprite.direct)
 
             if can_move == 0: # если пусто, то просто шагаем вперед
@@ -270,6 +274,9 @@ class BaseSprite:
                     current_sprite.collected_diamonds +=1
 
                     forward_sprite.kill()
+                    if current_sprite.collected_diamonds >= 10:
+                        # открываем дверь
+                        current_sprite.door_opened(sprites_list)
 
                     sprites_list.add(BlankField(current_sprite.cX1 + tmp[current_sprite.direct - 1][0], current_sprite.cY1 + tmp[current_sprite.direct - 1][1]))
 
@@ -287,7 +294,18 @@ class BaseSprite:
                     elif current_sprite.pushed_stone>= FC.SIZE_CELL and current_sprite.direct == 4:
                         # придаем камню слева имульс движения влево
                         forward_sprite.direct = 4
-                        pass
+                elif forward_sprite.unitCod == 9:  # уходим в открытую дверь
+                    if forward_sprite:
+                        tmp = [[0, -1], [1, 0], [0, 1], [-1, 0]]  # для шага вперед
+                        current_sprite.cX += current_sprite.speedX * tmp[current_sprite.direct - 1][0]
+                        current_sprite.cY += current_sprite.speedY * tmp[current_sprite.direct - 1][1]
+                        current_sprite.cX1 = current_sprite.cX // FC.SIZE_CELL
+                        current_sprite.cY1 = current_sprite.cY // FC.SIZE_CELL
+
+                        current_sprite.finished_X1 = forward_sprite.cX1
+                        current_sprite.finished_Y1 = forward_sprite.cY1
+
+
         else:
             current_sprite.pushed_stone = 0 # обнуляем усилия по толканию камня
 
@@ -317,3 +335,10 @@ class BaseSprite:
                 forward_sprite.kill()
                 sprites_list.add(BlankField(current_sprite.cX1 + tmp[direct_dig - 1][0],
                                             current_sprite.cY1 + tmp[direct_dig - 1][1],FC.LENGTH_OF_LIFE*2))
+
+
+    @staticmethod
+    def door_opened(sp):
+        for i in sp:
+            if i.unitCod == 9:
+                i.set_imindex(1)

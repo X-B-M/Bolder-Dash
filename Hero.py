@@ -24,7 +24,8 @@ class Hero(pygame.sprite.Sprite, BaseSprite):
     force_pushed_stone = 5
     collected_diamonds =0
     collected_diamonds_prev = 0
-
+    finished_X1 = -1 # когда эта координата станет положительной, значит дверь открыта и можно покинуть уровень,
+    finished_Y1 = -1 # встав на эту координату
     def __init__(self, parX, parY):
 
         self.id = self.set_id()
@@ -78,16 +79,16 @@ class Hero(pygame.sprite.Sprite, BaseSprite):
         if self.cX % FC.SIZE_CELL == 0 and self.cY % FC.SIZE_CELL == 0:
 
             keys = pygame.key.get_pressed()
-            if keys[pygame.K_RIGHT] and keys[K_SPACE]:
+            if keys[pygame.K_RIGHT] and (keys[K_SPACE] or keys[K_LSHIFT]):
                 # копаем справа
                 self.dig_plane(self, sp, 2)
-            elif keys[pygame.K_LEFT] and keys[K_SPACE]:
+            elif keys[pygame.K_LEFT] and (keys[K_SPACE] or keys[K_LSHIFT]):
                 # копаем слева
                 self.dig_plane(self, sp, 4)
-            elif keys[pygame.K_UP] and keys[K_SPACE]:
+            elif keys[pygame.K_UP] and (keys[K_SPACE] or keys[K_LSHIFT]):
                 # копаем вверх
                 self.dig_plane(self, sp, 1)
-            elif keys[pygame.K_DOWN] and keys[K_SPACE]:
+            elif keys[pygame.K_DOWN] and (keys[K_SPACE] or keys[K_LSHIFT]):
                 # копаем вниз
                 self.dig_plane(self, sp, 3)
             elif keys[K_LEFT]:

@@ -15,6 +15,7 @@ from Hero import *
 from Diamond import *
 from Explosiv import *
 from BlankField import *
+from Door import *
 
 FC.SIZEFIELD_X = 35
 FC.SIZEFIELD_Y = 19
@@ -137,6 +138,8 @@ class Game_location(Location):
                     self.game_units.add(MonstrDiamond(tX, tY))
                 elif l1 == "8":
                     self.game_units.add(Hero(tX, tY))
+                elif l1 == "9":
+                    self.game_units.add(Door(tX, tY))
                 #  else:
                 #     self.game_units.add(BlankField(tX,tY))
                 tX += 1
