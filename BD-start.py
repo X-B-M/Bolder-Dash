@@ -15,6 +15,7 @@ from Hero import *
 from Diamond import *
 from Explosiv import *
 from BlankField import *
+from Door import *
 
 FC.SIZEFIELD_X = 35
 FC.SIZEFIELD_Y = 19
@@ -53,8 +54,12 @@ class General:
                 self.map_game[i].append([])
 
     def event(self, event):
+        #print(f'USEREVENT= {USEREVENT} , event.type={event.type}')
         if event.type == QUIT:
             sys.exit()
+        if event.type == USEREVENT:
+            general.location = game_location2
+            #general.location = exit_location
         if event.type == KEYUP:
             if event.key == K_m:
                 if self.music:
@@ -79,7 +84,7 @@ class Start_location(Location):
     def event(self, event):
         if event.type == KEYDOWN:
             if event.key == 13:
-                general.location = game_location
+                general.location = game_location1
 
 
 class Exit_location(Location):
@@ -109,15 +114,14 @@ class Exit_location(Location):
 class Game_location(Location):
     alreadyPlay = 0
 
-    def __init__(self):
+    def __init__(self, par_map):
         Location.__init__(self)
         big_surf = pygame.image.load('img/fone.png').convert()
         big_surf = pygame.transform.scale(big_surf, self.window.get_size())
         #        pygame.image.save(big_surf, 'day1.png')
         self.background = big_surf
-
         self.game_units = pygame.sprite.Group()
-        f = open('map.txt', 'r')
+        f = open(par_map, 'r')
         tY = 0
         for line in f:
             tX = 0
@@ -138,11 +142,13 @@ class Game_location(Location):
                     self.game_units.add(MonstrDiamond(tX, tY))
                 elif l1 == "8":
                     self.game_units.add(Hero(tX, tY))
-
+                elif l1 == "9":
+                    self.game_units.add(Door(tX, tY))
                 #  else:
                 #     self.game_units.add(BlankField(tX,tY))
                 tX += 1
             tY += 1
+
         f.close()#        keys = pygame.key.get_pressed()
 
     def draw(self):
@@ -155,7 +161,8 @@ class Game_location(Location):
 general = General()
 
 start_location = Start_location()
-game_location = Game_location()
+game_location1 = Game_location('map01.txt')
+game_location2 = Game_location('map02.txt')
 exit_location = Exit_location()
 
 general.location = start_location
@@ -166,6 +173,7 @@ while 1:
     for event in pygame.event.get():
         general.location.event(event)
         general.event(event)
+
     general.location.draw()
     pygame.display.flip()
     clock.tick(30)

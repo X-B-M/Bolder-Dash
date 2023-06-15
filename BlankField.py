@@ -6,7 +6,7 @@ from config import FieldConstants as FC
 
 
 class BlankField(pygame.sprite.Sprite, BaseSprite):
-    time_to_live = FC.LENGTH_OF_LIFE
+
     speed_live = 5
     slippery = False  # не скользкий, с него камни не скатываются
 
@@ -14,8 +14,8 @@ class BlankField(pygame.sprite.Sprite, BaseSprite):
 
     def set_imindex(self, value): self.__imindex = value
 
-    def __init__(self, parX, parY):
-
+    def __init__(self, parX, parY, parTTL=FC.LENGTH_OF_LIFE):
+        self.time_to_live = parTTL
         self.id = -1  # здесь id возможно не нужен
 
         pygame.sprite.Sprite.__init__(self)

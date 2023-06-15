@@ -20,9 +20,12 @@ class Hero(pygame.sprite.Sprite, BaseSprite):
     speedX = 5
     speedY = 5
     slippery = False
-    time_to_live = FC.LENGTH_OF_LIFE
-    speed_live = 0 #живет вечно до особого события
-
+    pushed_stone = 0
+    force_pushed_stone = 5
+    collected_diamonds =0
+    collected_diamonds_prev = 0
+    finished_X1 = -1 # когда эта координата станет положительной, значит дверь открыта и можно покинуть уровень,
+    finished_Y1 = -1 # встав на эту координату
     def __init__(self, parX, parY):
 
         self.id = self.set_id()
@@ -74,8 +77,21 @@ class Hero(pygame.sprite.Sprite, BaseSprite):
     def update(self, sp):
 
         if self.cX % FC.SIZE_CELL == 0 and self.cY % FC.SIZE_CELL == 0:
+
             keys = pygame.key.get_pressed()
-            if keys[K_LEFT]:
+            if keys[pygame.K_RIGHT] and (keys[K_SPACE] or keys[K_LSHIFT]):
+                # копаем справа
+                self.dig_plane(self, sp, 2)
+            elif keys[pygame.K_LEFT] and (keys[K_SPACE] or keys[K_LSHIFT]):
+                # копаем слева
+                self.dig_plane(self, sp, 4)
+            elif keys[pygame.K_UP] and (keys[K_SPACE] or keys[K_LSHIFT]):
+                # копаем вверх
+                self.dig_plane(self, sp, 1)
+            elif keys[pygame.K_DOWN] and (keys[K_SPACE] or keys[K_LSHIFT]):
+                # копаем вниз
+                self.dig_plane(self, sp, 3)
+            elif keys[K_LEFT]:
                 self.direct = 4
             elif keys[K_RIGHT]:
                 self.direct = 2
@@ -83,63 +99,15 @@ class Hero(pygame.sprite.Sprite, BaseSprite):
                 self.direct = 1
             elif keys[K_DOWN]:
                 self.direct = 3
+
             else:
                 self.direct = 0
 
-        if self.cX % FC.SIZE_CELL == 0 and self.cY % FC.SIZE_CELL == 0 and self.direct != 0:  # можно ли начать
-            # двигаться в текущем  направлении
+        self.hero_move(self, sp)
 
-            can_move = self.check_move(sp, self.cX1, self.cY1, self.direct)
-
-            if can_move == 0: # если пусто, то просто шагаем вперед
-                tmp = [[0, -1], [1, 0], [0, 1], [-1, 0]]  # для шага вперед
-                self.cX += self.speedX * tmp[self.direct - 1][0]
-                self.cY += self.speedY * tmp[self.direct - 1][1]
-                self.cX1 = self.cX // FC.SIZE_CELL
-                self.cY1 = self.cY // FC.SIZE_CELL
-
-                sp.add(BlankField(self.cX1 + tmp[self.direct - 1][0], self.cY1 + tmp[self.direct - 1][1]))
-            else:
-                forward_sprite = self.get_sprite_by_id(sp, can_move)
-                if forward_sprite.unitCod == 3:
-                    tmp = [[0, -1], [1, 0], [0, 1], [-1, 0]]  # для шага вперед
-                    self.cX += self.speedX * tmp[self.direct - 1][0]
-                    self.cY += self.speedY * tmp[self.direct - 1][1]
-                    self.cX1 = self.cX // FC.SIZE_CELL
-                    self.cY1 = self.cY // FC.SIZE_CELL
-
-                    forward_sprite.kill()
-
-                    sp.add(BlankField(self.cX1 + tmp[self.direct - 1][0], self.cY1 + tmp[self.direct - 1][1]))
-                elif forward_sprite.unitCod == 5:
-                    tmp = [[0, -1], [1, 0], [0, 1], [-1, 0]]  # для шага вперед
-                    self.cX += self.speedX * tmp[self.direct - 1][0]
-                    self.cY += self.speedY * tmp[self.direct - 1][1]
-                    self.cX1 = self.cX // FC.SIZE_CELL
-                    self.cY1 = self.cY // FC.SIZE_CELL
-
-                    forward_sprite.kill()
-
-                    sp.add(BlankField(self.cX1 + tmp[self.direct - 1][0], self.cY1 + tmp[self.direct - 1][1]))
-
-        else:
-            if self.direct == 0:
-                self.cX1 = self.cX // FC.SIZE_CELL
-                self.cY1 = self.cY // FC.SIZE_CELL
-                self.cX = self.cX1 * FC.SIZE_CELL
-                self.cY = self.cY1 * FC.SIZE_CELL
-            else:
-                tmp = [[0, -1], [1, 0], [0, 1], [-1, 0]]  # для шага вперед
-                self.cX += self.speedX * tmp[self.direct - 1][0]
-                self.cY += self.speedY * tmp[self.direct - 1][1]
-                self.cX1 = self.cX // FC.SIZE_CELL
-                self.cY1 = self.cY // FC.SIZE_CELL
-
-        self.rect.x = self.cX
-        self.rect.y = self.cY
-        if self.cY % FC.SIZE_CELL == 0 and self.cX % FC.SIZE_CELL == 0:
-            #self.direct = 0
-            pass
+        if self.collected_diamonds != self.collected_diamonds_prev:
+            self.collected_diamonds_prev = self.collected_diamonds
+            pygame.display.set_caption('Алмазов собрано: ' + str(self.collected_diamonds))
 
         self.__imindex = 1 & (self.__imindex + 1)
         self.image = self.images[self.arrmove[self.direct][self.__imindex]]

@@ -66,7 +66,7 @@ class Stone(pygame.sprite.Sprite, BaseSprite):
 
     def update(self, sp):
 
-        self.fall_and_slippery(sp, self)
+        self.fall_and_slippery(self, sp)
 
     def draw(self, window):
         window.blit(self.image, (self.cX, self.cY))
