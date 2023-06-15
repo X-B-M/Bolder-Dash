@@ -54,8 +54,12 @@ class General:
                 self.map_game[i].append([])
 
     def event(self, event):
+        #print(f'USEREVENT= {USEREVENT} , event.type={event.type}')
         if event.type == QUIT:
             sys.exit()
+        if event.type == USEREVENT:
+            general.location = game_location2
+            #general.location = exit_location
         if event.type == KEYUP:
             if event.key == K_m:
                 if self.music:
@@ -80,7 +84,7 @@ class Start_location(Location):
     def event(self, event):
         if event.type == KEYDOWN:
             if event.key == 13:
-                general.location = game_location
+                general.location = game_location1
 
 
 class Exit_location(Location):
@@ -110,14 +114,14 @@ class Exit_location(Location):
 class Game_location(Location):
     alreadyPlay = 0
 
-    def __init__(self):
+    def __init__(self, par_map):
         Location.__init__(self)
         big_surf = pygame.image.load('img/fone.png').convert()
         big_surf = pygame.transform.scale(big_surf, self.window.get_size())
         #        pygame.image.save(big_surf, 'day1.png')
         self.background = big_surf
         self.game_units = pygame.sprite.Group()
-        f = open('map.txt', 'r')
+        f = open(par_map, 'r')
         tY = 0
         for line in f:
             tX = 0
@@ -157,7 +161,8 @@ class Game_location(Location):
 general = General()
 
 start_location = Start_location()
-game_location = Game_location()
+game_location1 = Game_location('map01.txt')
+game_location2 = Game_location('map02.txt')
 exit_location = Exit_location()
 
 general.location = start_location

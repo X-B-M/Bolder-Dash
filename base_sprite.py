@@ -1,10 +1,9 @@
+import pygame
+
 from config import FieldConstants as FC
 from config import itera_id
 
-GAME_CAPTION ='======'
-
 class BaseSprite:
-    global GAME_CAPTION
     @staticmethod
     def set_id():
         return itera_id.__next__()
@@ -240,6 +239,8 @@ class BaseSprite:
 
             if  current_sprite.finished_X1 == current_sprite.cX1 and current_sprite.finished_Y1 == current_sprite.cY1 :
                 # зашли в открытую дверь, покидаем уровень
+                my_event = pygame.event.Event(pygame.USEREVENT, message="Exit to next level")
+                pygame.event.post(my_event)
                 return
 
             can_move = current_sprite.check_move(sprites_list, current_sprite.cX1, current_sprite.cY1, current_sprite.direct)
