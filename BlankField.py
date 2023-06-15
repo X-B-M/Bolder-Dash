@@ -6,7 +6,7 @@ from config import FieldConstants as FC
 
 
 class BlankField(pygame.sprite.Sprite, BaseSprite):
-
+    time_to_live = FC.SIZE_CELL
     speed_live = 5
     slippery = False  # не скользкий, с него камни не скатываются
 
@@ -33,10 +33,8 @@ class BlankField(pygame.sprite.Sprite, BaseSprite):
         self.cX1 = self.cX // FC.SIZE_CELL
         self.cY1 = self.cY // FC.SIZE_CELL
 
-        self.cX2 = (self.cX + 39) // FC.SIZE_CELL
-        self.cY2 = (self.cY + 39) // FC.SIZE_CELL
         self.unitName = "blank"
-        self.unitCod = 0
+        self.unitCod = FC.BLANKFIELD
 
     def update(self, sp):
         self.time_to_live -= self.speed_live

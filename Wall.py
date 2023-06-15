@@ -12,8 +12,6 @@ class Wall(pygame.sprite.Sprite, BaseSprite):
     status = 0
     statusTimeLife = 0  # Время движения в заданном направлении
     slippery = False  # не скользкий, с него камни не скатываются
-    time_to_live = FC.LENGTH_OF_LIFE
-    speed_live = 0 #живет вечно до особого события
 
     def get_imindex(self):
         return self.__imindex
@@ -36,7 +34,7 @@ class Wall(pygame.sprite.Sprite, BaseSprite):
         self.images.append(image)
 
         self.__imindex = typeOfWall
-        self.unitCod = typeOfWall
+
         self.image = self.images[self.__imindex]
         self.rect = image.get_rect()
         self.cX = parX * FC.SIZE_CELL  # random.randint(0,general.sizeFieldX-60)//60*60
@@ -45,13 +43,12 @@ class Wall(pygame.sprite.Sprite, BaseSprite):
         self.cX1 = self.cX // FC.SIZE_CELL
         self.cY1 = self.cY // FC.SIZE_CELL
 
-        self.cX2 = (self.cX + 39) // FC.SIZE_CELL
-        self.cY2 = (self.cY + 39) // FC.SIZE_CELL
         if typeOfWall == 1:
             self.unitName = "wall_steel"
+            self.unitCod = FC.WALL_STEEL
         else:
             self.unitName = "wall_brick"
-
+            self.unitCod = FC.WALL_BRICK
     def update(self, sp):
         self.rect.x = self.cX
         self.rect.y = self.cY

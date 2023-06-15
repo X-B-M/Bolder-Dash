@@ -24,7 +24,7 @@ class BaseSprite:
         for i in sprites_list:  # уничтожаем все вокруг центра взрыва
             if i.cX1 >= cur_spr.cX1 - 1 and i.cX1 <= cur_spr.cX1 + 1:
                 if i.cY1 >= cur_spr.cY1 - 1 and i.cY1 <= cur_spr.cY1 + 1:
-                    if i.unitCod != 1 and i.unitCod != 0 and i.unitCod != 9:
+                    if i.unitCod != FC.WALL_STEEL and i.unitCod != FC.BLANKFIELD and i.unitCod != FC.DOOR:
                         i.kill()
                     else:
                         if cur_spr.cX1 == i.cX1 and cur_spr.cY1 == i.cY1:
@@ -34,7 +34,7 @@ class BaseSprite:
 
         for i in area_of_explosive:
             if i not in not_append:
-                if cur_spr.unitCod in [7, 8]:  # получаем алмазы
+                if cur_spr.unitCod in [FC.MONSTERDIAMOND, FC.HERO]:  # получаем алмазы
                     from Diamond import Diamond
                     sprites_list.add(Diamond(i[0], i[1]))
                 else:
@@ -57,7 +57,7 @@ class BaseSprite:
         convert_direct = [4, 1, 5, 7, 3]
         for i in sp:
             for j in range(0, 9):
-                if x + tmp[j][0] == i.cX1 and y + tmp[j][1] == i.cY1 and i.unitCod == 8:
+                if x + tmp[j][0] == i.cX1 and y + tmp[j][1] == i.cY1 and i.unitCod == FC.HERO:
                     return i.id
         return -1
 
@@ -86,7 +86,7 @@ class BaseSprite:
             # можем взорвать что-то внизу, если падаем
             flag_kill = []
             for i in sprites_list:
-                if i.unitCod in [6, 7, 8]:
+                if i.unitCod in [FC.MONSTERBLANK, FC.MONSTERDIAMOND, FC.HERO]:
                     #if current_sprite.cX1 == i.cX1 and current_sprite.cY > i.cY - FC.SIZE_CELL and current_sprite.cY1 < i.cY1:
                     if current_sprite.cX1 == i.cX1 and current_sprite.cY1 in [i.cY1, i.cY1-1]:
                         # цель найдена, взрываем
@@ -184,9 +184,9 @@ class BaseSprite:
             current_sprite.direct = current_sprite.direct_list[0]
             exist_support = False  # если справа по направлению движения есть спрайт(опора), то двигаться можно
             # иначе - меняем напраление на следующее в массиве
-            if current_sprite.unitCod == 7:
+            if current_sprite.unitCod == FC.MONSTERDIAMOND:
                 tmp = [[-1, 0], [0, -1], [1, 0], [0, 1]]  # для поиска опоры MonstrDiamond
-            else: # .unitCod == 6
+            else: # .unitCod == FC.MONSTERBLANK
                 tmp = [[1, 0], [0, 1], [-1, 0], [0, -1]]  # для поиска опоры MonstrBlank
             for i in sprites_list:
                 if current_sprite.cX1 + tmp[current_sprite.direct - 1][0] == i.cX1 and current_sprite.cY1 + tmp[current_sprite.direct - 1][1] == i.cY1:
@@ -255,7 +255,7 @@ class BaseSprite:
                 sprites_list.add(BlankField(current_sprite.cX1 + tmp[current_sprite.direct - 1][0], current_sprite.cY1 + tmp[current_sprite.direct - 1][1]))
             else:
                 forward_sprite = current_sprite.get_sprite_by_id(sprites_list, can_move)
-                if forward_sprite.unitCod == 3: # съедаем квант поля
+                if forward_sprite.unitCod == FC.PLANE: # съедаем квант поля
                     tmp = [[0, -1], [1, 0], [0, 1], [-1, 0]]  # для шага вперед
                     current_sprite.cX += current_sprite.speedX * tmp[current_sprite.direct - 1][0]
                     current_sprite.cY += current_sprite.speedY * tmp[current_sprite.direct - 1][1]
@@ -265,7 +265,7 @@ class BaseSprite:
                     forward_sprite.kill()
 
                     sprites_list.add(BlankField(current_sprite.cX1 + tmp[current_sprite.direct - 1][0], current_sprite.cY1 + tmp[current_sprite.direct - 1][1]))
-                elif forward_sprite.unitCod == 5: # съедаем алмаз
+                elif forward_sprite.unitCod == FC.DIAMOND: # съедаем алмаз
                     tmp = [[0, -1], [1, 0], [0, 1], [-1, 0]]  # для шага вперед
                     current_sprite.cX += current_sprite.speedX * tmp[current_sprite.direct - 1][0]
                     current_sprite.cY += current_sprite.speedY * tmp[current_sprite.direct - 1][1]
@@ -281,7 +281,7 @@ class BaseSprite:
 
                     sprites_list.add(BlankField(current_sprite.cX1 + tmp[current_sprite.direct - 1][0], current_sprite.cY1 + tmp[current_sprite.direct - 1][1]))
 
-                elif forward_sprite.unitCod == 4: # толкаем камень
+                elif forward_sprite.unitCod == FC.STONE: # толкаем камень
                     if current_sprite.direct in [2, 4]:
                         current_sprite.pushed_stone+= current_sprite.force_pushed_stone
                     else:
@@ -295,7 +295,7 @@ class BaseSprite:
                     elif current_sprite.pushed_stone>= FC.SIZE_CELL and current_sprite.direct == 4:
                         # придаем камню слева имульс движения влево
                         forward_sprite.direct = 4
-                elif forward_sprite.unitCod == 9:  # уходим в открытую дверь
+                elif forward_sprite.unitCod == FC.DOOR:  # уходим в открытую дверь
                     if forward_sprite:
                         tmp = [[0, -1], [1, 0], [0, 1], [-1, 0]]  # для шага вперед
                         current_sprite.cX += current_sprite.speedX * tmp[current_sprite.direct - 1][0]
@@ -331,7 +331,7 @@ class BaseSprite:
         can_dig = current_sprite.check_move(sprites_list, current_sprite.cX1, current_sprite.cY1, direct_dig)
         if can_dig >0:
             forward_sprite = current_sprite.get_sprite_by_id(sprites_list, can_dig)
-            if forward_sprite.unitCod == 3:  # съедаем квант поля
+            if forward_sprite.unitCod == FC.PLANE:  # съедаем квант поля
                 tmp = [[0, -1], [1, 0], [0, 1], [-1, 0]]  # для шага вперед
                 forward_sprite.kill()
                 sprites_list.add(BlankField(current_sprite.cX1 + tmp[direct_dig - 1][0],
@@ -341,5 +341,5 @@ class BaseSprite:
     @staticmethod
     def door_opened(sp):
         for i in sp:
-            if i.unitCod == 9:
+            if i.unitCod == FC.DOOR:
                 i.set_imindex(1)

@@ -39,7 +39,7 @@ class Door(pygame.sprite.Sprite, BaseSprite):
         self.cY1 = self.cY // FC.SIZE_CELL
 
         self.unitName = "door"
-        self.unitCod = 9
+        self.unitCod = FC.DOOR
 
         self.rect.x = self.cX
         self.rect.y = self.cY

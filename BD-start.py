@@ -9,16 +9,13 @@ from config import FieldConstants as FC
 from Wall import *
 from Plane import *
 from Stone import *
-from MonstrBlank import *
-from MonstrDiamond import *
+from MonsterBlank import *
+from MonsterDiamond import *
 from Hero import *
 from Diamond import *
 from Explosiv import *
 from BlankField import *
 from Door import *
-
-FC.SIZEFIELD_X = 35
-FC.SIZEFIELD_Y = 19
 
 class Location(object):
     def __init__(self):
@@ -39,7 +36,6 @@ class General:
     sizeFieldY = FC.SIZEFIELD_Y * FC.SIZE_CELL
     map_game = []
 
-    #    dict_game={} #"словарь" расположения юнитов на поле(в игре) x*100+y
     def __init__(self) -> object:
         pygame.init()
         pygame.display.set_mode((self.sizeFieldX, self.sizeFieldY))
@@ -54,12 +50,14 @@ class General:
                 self.map_game[i].append([])
 
     def event(self, event):
-        #print(f'USEREVENT= {USEREVENT} , event.type={event.type}')
         if event.type == QUIT:
             sys.exit()
         if event.type == USEREVENT:
-            general.location = game_location2
-            #general.location = exit_location
+            game_location.pop(0)
+            if len(game_location)>0:
+                general.location = game_location[0]
+            else:
+                general.location = exit_location
         if event.type == KEYUP:
             if event.key == K_m:
                 if self.music:
@@ -77,6 +75,11 @@ class Start_location(Location):
         Location.__init__(self)
         background = pygame.image.load('img/first.png')
         self.background = pygame.transform.scale(background, self.window.get_size())
+        font = pygame.font.Font(None, 36)
+        text = font.render("press Enter to start", True, (10, 10, 10))
+        textpos = text.get_rect(center=(FC.SIZEFIELD_X*FC.SIZE_CELL/2, FC.SIZEFIELD_Y*FC.SIZE_CELL/2))
+        self.background.blit(text, textpos)
+
 
     def draw(self):
         self.window.blit(self.background, (0, 0))
@@ -84,7 +87,7 @@ class Start_location(Location):
     def event(self, event):
         if event.type == KEYDOWN:
             if event.key == 13:
-                general.location = game_location1
+                general.location = game_location[0]
 
 
 class Exit_location(Location):
@@ -101,12 +104,13 @@ class Exit_location(Location):
         self.background.fill((0, 200, 200))
         font = pygame.font.Font(None, 36)
 
-        score = font.render("your level: " + str(general.level), True, (20, 20, 20))
-        scorepos = score.get_rect(center=(320, 150))
-        self.background.blit(score, scorepos)
+        #score = font.render("your level: " + str(general.level), True, (20, 20, 20))
+        #scorepos = score.get_rect(center=(320, 150))
+        #self.background.blit(score, scorepos)
 
         text = font.render("press Esc key to exit", True, (10, 10, 10))
-        textpos = text.get_rect(center=(320, 450))
+        textpos = text.get_rect(center=(FC.SIZEFIELD_X*FC.SIZE_CELL/2, FC.SIZEFIELD_Y*FC.SIZE_CELL/2))
+
         self.background.blit(text, textpos)
         self.window.blit(self.background, (0, 0))
 
@@ -137,9 +141,9 @@ class Game_location(Location):
                 elif l1 == "5":
                     self.game_units.add(Diamond(tX, tY))
                 elif l1 == "6":
-                    self.game_units.add(MonstrBlank(tX, tY))
+                    self.game_units.add(MonsterBlank(tX, tY))
                 elif l1 == "7":
-                    self.game_units.add(MonstrDiamond(tX, tY))
+                    self.game_units.add(MonsterDiamond(tX, tY))
                 elif l1 == "8":
                     self.game_units.add(Hero(tX, tY))
                 elif l1 == "9":
@@ -161,8 +165,10 @@ class Game_location(Location):
 general = General()
 
 start_location = Start_location()
-game_location1 = Game_location('map01.txt')
-game_location2 = Game_location('map02.txt')
+game_location =[]
+game_location.append(Game_location('map01.txt'))
+game_location.append(Game_location('map02.txt'))
+game_location.append(Game_location('map03.txt'))
 exit_location = Exit_location()
 
 general.location = start_location

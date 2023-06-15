@@ -9,15 +9,9 @@ class Stone(pygame.sprite.Sprite, BaseSprite):
     speedY = 5
     cY1 = 0
     cX1 = 0
-    cY2 = 0
-    cX2 = 0
-    status = 0  # 0-no move,1-up,2-right,3-down,4-left
     kinect_energy = 0  # 'энергия удара. Двинулись - накопили 8. Стоим - убывает на 1 до 0
     slippery = True  # скользкий, с него камни скатываются
     direct = 3
-    time_to_live = FC.LENGTH_OF_LIFE
-    speed_live = 0 #живет вечно до особого события
-
 
     def get_imindex(self):
         return self.__imindex
@@ -58,11 +52,8 @@ class Stone(pygame.sprite.Sprite, BaseSprite):
         self.cX1 = self.cX // FC.SIZE_CELL
         self.cY1 = self.cY // FC.SIZE_CELL
 
-        self.cX2 = self.cX // FC.SIZE_CELL
-        self.cY2 = self.cY // FC.SIZE_CELL
-
         self.unitName = "stone"
-        self.unitCod = 4
+        self.unitCod = FC.STONE
 
     def update(self, sp):
 

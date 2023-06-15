@@ -12,9 +12,6 @@ class Diamond(pygame.sprite.Sprite, BaseSprite):
     speedY = 5
     cY1 = 0
     cX1 = 0
-    cY2 = 0
-    cX2 = 0
-    status = 0
     direct = 3
     slippery = True  # скользкий, с него камни скатываются
     kinect_energy = 0
@@ -59,11 +56,8 @@ class Diamond(pygame.sprite.Sprite, BaseSprite):
         self.cX1 = self.cX // FC.SIZE_CELL
         self.cY1 = self.cY // FC.SIZE_CELL
 
-        self.cX2 = (self.cX + 39) // FC.SIZE_CELL
-        self.cY2 = (self.cY + 39) // FC.SIZE_CELL
-
         self.unitName = "diamond"
-        self.unitCod = 5
+        self.unitCod = FC.DIAMOND
 
     def move(self):
         pass

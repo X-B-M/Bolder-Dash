@@ -2,10 +2,9 @@ import pygame
 from pygame.locals import *
 from config import FieldConstants as fc, itera_id
 from BlankField import *
-from base_sprite import BaseSprite
 
 
-class MonstrDiamond(pygame.sprite.Sprite, BaseSprite):
+class MonsterBlank(pygame.sprite.Sprite, BaseSprite):
     speedX = 5
     speedY = 5
     cY1 = 0
@@ -14,7 +13,7 @@ class MonstrDiamond(pygame.sprite.Sprite, BaseSprite):
     cX2 = 0
     status = 0
     direct = 3
-    direct_list = [4, 3, 2, 1]  # двигаемся по правилу левой руки.
+    direct_list = [1, 2, 3, 4]  # двигаемся по правилу левой руки.
     slippery = False  # скользкий, с него камни скатываются
     prev_status = 0  # информация о том, в прошлой итерции обект двигался (1,2,3,4)
     statusTimeLife = 0  # Время движения в заданном направлении
@@ -33,19 +32,19 @@ class MonstrDiamond(pygame.sprite.Sprite, BaseSprite):
 
         pygame.sprite.Sprite.__init__(self)
         self.images = []
-        image = pygame.image.load('img/monstr_diamond1.png').convert()
+        image = pygame.image.load('img/monster_blank1.png').convert()
         image.set_colorkey(image.get_at((0, 0)), RLEACCEL)
         self.images.append(image)
 
-        image = pygame.image.load('img/monstr_diamond2.png').convert()
+        image = pygame.image.load('img/monster_blank2.png').convert()
         image.set_colorkey(image.get_at((0, 0)), RLEACCEL)
         self.images.append(image)
 
-        image = pygame.image.load('img/monstr_diamond3.png').convert()
+        image = pygame.image.load('img/monster_blank3.png').convert()
         image.set_colorkey(image.get_at((0, 0)), RLEACCEL)
         self.images.append(image)
 
-        image = pygame.image.load('img/monstr_diamond4.png').convert()
+        image = pygame.image.load('img/monster_blank4.png').convert()
         image.set_colorkey(image.get_at((0, 0)), RLEACCEL)
         self.images.append(image)
 
@@ -60,11 +59,8 @@ class MonstrDiamond(pygame.sprite.Sprite, BaseSprite):
         self.cX1 = self.cX // fc.SIZE_CELL
         self.cY1 = self.cY // fc.SIZE_CELL
 
-        self.cX2 = (self.cX + 39) // fc.SIZE_CELL
-        self.cY2 = (self.cY + 39) // fc.SIZE_CELL
-
-        self.unitName = "monstrdiamond"
-        self.unitCod = 7
+        self.unitName = "monstrblank"
+        self.unitCod = FC.MONSTERBLANK
 
     def move(self):
         pass
