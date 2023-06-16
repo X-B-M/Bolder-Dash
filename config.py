@@ -2,7 +2,7 @@ class FieldConstants:
     SIZE_CELL = 40
     SIZEFIELD_X = 35
     SIZEFIELD_Y = 19
-    CNT_MAX_SPRITE = 2000
+    CNT_MAX_SPRITE = 2000000000
     LENGTH_OF_LIFE = 40
 
     EXPLOSIVE = 0
@@ -16,6 +16,7 @@ class FieldConstants:
     MONSTERDIAMOND = 7
     HERO = 8
     DOOR = 9
+    MAGMA = 10
 
 
 def set_sprite_id() -> int:

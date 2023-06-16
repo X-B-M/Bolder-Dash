@@ -16,6 +16,7 @@ from Diamond import *
 from Explosiv import *
 from BlankField import *
 from Door import *
+from Magma import *
 
 class Location(object):
     def __init__(self):
@@ -148,6 +149,9 @@ class Game_location(Location):
                     self.game_units.add(Hero(tX, tY))
                 elif l1 == "9":
                     self.game_units.add(Door(tX, tY))
+                elif l1 == "A":
+                    self.game_units.add(Magma(tX, tY))
+
                 #  else:
                 #     self.game_units.add(BlankField(tX,tY))
                 tX += 1

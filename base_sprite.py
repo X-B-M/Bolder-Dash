@@ -1,7 +1,10 @@
+import random
+
 import pygame
 
 from config import FieldConstants as FC
 from config import itera_id
+
 
 class BaseSprite:
     @staticmethod
@@ -14,17 +17,19 @@ class BaseSprite:
             if i.id == par_id:
                 return i
 
+
     @staticmethod
     def explosiv_sprite(sprites_list, par_id):
         not_append = []
         cur_spr = BaseSprite.get_sprite_by_id(sprites_list, par_id)
-        area_of_explosive = [[cur_spr.cX1 - 1, cur_spr.cY1 - 1], [cur_spr.cX1, cur_spr.cY1 - 1], [cur_spr.cX1 + 1, cur_spr.cY1 - 1],
-                             [cur_spr.cX1 - 1, cur_spr.cY1], [cur_spr.cX1, cur_spr.cY1], [cur_spr.cX1 + 1, cur_spr.cY1],
-                             [cur_spr.cX1 - 1, cur_spr.cY1 + 1], [cur_spr.cX1, cur_spr.cY1 + 1], [cur_spr.cX1 + 1, cur_spr.cY1 + 1]]
+        area_of_explosive = [[cur_spr.cX1 - 1, cur_spr.cY1 - 1], [cur_spr.cX1 + 0, cur_spr.cY1 - 1], [cur_spr.cX1 + 1, cur_spr.cY1 - 1],
+                             [cur_spr.cX1 - 1, cur_spr.cY1 + 0], [cur_spr.cX1 + 0, cur_spr.cY1 + 0], [cur_spr.cX1 + 1, cur_spr.cY1 + 0],
+                             [cur_spr.cX1 - 1, cur_spr.cY1 + 1], [cur_spr.cX1 + 0, cur_spr.cY1 + 1], [cur_spr.cX1 + 1, cur_spr.cY1 + 1]]
         for i in sprites_list:  # уничтожаем все вокруг центра взрыва
             if i.cX1 >= cur_spr.cX1 - 1 and i.cX1 <= cur_spr.cX1 + 1:
                 if i.cY1 >= cur_spr.cY1 - 1 and i.cY1 <= cur_spr.cY1 + 1:
-                    if i.unitCod != FC.WALL_STEEL and i.unitCod != FC.BLANKFIELD and i.unitCod != FC.DOOR:
+                    #if i.unitCod != FC.WALL_STEEL and i.unitCod != FC.BLANKFIELD and i.unitCod != FC.DOOR:
+                    if i.unitCod != FC.WALL_STEEL and i.unitCod != FC.DOOR:
                         i.kill()
                     else:
                         if cur_spr.cX1 == i.cX1 and cur_spr.cY1 == i.cY1:
@@ -57,12 +62,28 @@ class BaseSprite:
         convert_direct = [4, 1, 5, 7, 3]
         for i in sp:
             for j in range(0, 9):
-                if x + tmp[j][0] == i.cX1 and y + tmp[j][1] == i.cY1 and i.unitCod == FC.HERO:
+                if x + tmp[j][0] == i.cX1 and y + tmp[j][1] == i.cY1 and (i.unitCod == FC.HERO or i.unitCod == FC.MAGMA):
                     return i.id
         return -1
 
+
     @staticmethod
     def check_move(sp, x, y, cm_direct) ->int:
+        cm = [0, 0, 0,
+              0, 0, 0,
+              0, 0, 0]
+        tmp = [[-1, -1], [0, -1], [+1, -1],
+               [-1, 0], [0, 0], [+1, 0],
+               [-1, +1], [0, +1], [+1, +1]]
+        # direct=[41, up 1, 12, left 2, 23, down 3, 34, right 4, stop 0]
+        convert_direct = [4, 1, 5, 7, 3]
+        for i in sp:
+            if x + tmp[convert_direct[cm_direct]][0] == i.cX1 and y + tmp[convert_direct[cm_direct]][1] == i.cY1:
+                return i.id
+        return 0
+
+    @staticmethod
+    def check_move_old(sp, x, y, cm_direct) ->int:
         cm = [0, 0, 0,
               0, 0, 0,
               0, 0, 0]
@@ -327,11 +348,11 @@ class BaseSprite:
 
     @staticmethod
     def dig_plane(current_sprite, sprites_list, direct_dig):
-        from BlankField import BlankField
         can_dig = current_sprite.check_move(sprites_list, current_sprite.cX1, current_sprite.cY1, direct_dig)
-        if can_dig >0:
+        if can_dig > 0:
             forward_sprite = current_sprite.get_sprite_by_id(sprites_list, can_dig)
             if forward_sprite.unitCod == FC.PLANE:  # съедаем квант поля
+                from BlankField import BlankField
                 tmp = [[0, -1], [1, 0], [0, 1], [-1, 0]]  # для шага вперед
                 forward_sprite.kill()
                 sprites_list.add(BlankField(current_sprite.cX1 + tmp[direct_dig - 1][0],
@@ -343,3 +364,36 @@ class BaseSprite:
         for i in sp:
             if i.unitCod == FC.DOOR:
                 i.set_imindex(1)
+
+    @staticmethod
+    def spreading_magma(current_sprite, sprites_list):
+        from BlankField import BlankField
+        tmp = [[0, -1], [1, 0], [0, 1], [-1, 0]]  # для шага вперед
+        can_spreading = []
+        may_be_killed = []
+        for d in range(1,5):
+            can_move = current_sprite.check_move(sprites_list, current_sprite.cX1, current_sprite.cY1, d)
+            if can_move > 0:
+                tmp_sprite = current_sprite.get_sprite_by_id(sprites_list, can_move)
+
+                if tmp_sprite.unitCod in [FC.PLANE]:
+                    can_spreading.append((current_sprite.cX1 + tmp[d - 1][0],
+                                          current_sprite.cY1 + tmp[d - 1][1]))
+                    may_be_killed.append(tmp_sprite)
+            else:
+                can_spreading.append((current_sprite.cX1 + tmp[d - 1][0], current_sprite.cY1 + tmp[d - 1][1]))
+
+        if len(can_spreading) == 0: # вся магма заперта
+            # тут возжожно пора превращаться в алмазы
+            pass
+        else: # магма распространяется
+            if random.randint(0, 100) > 98:
+                from Magma import Magma
+                tmp_index = random.randint(0, len(can_spreading)-1)
+                #print(f'len(can_spreading)={len(can_spreading)}, tmp_index={tmp_index}')
+                sprites_list.add(Magma(can_spreading[tmp_index][0],
+                                       can_spreading[tmp_index][1]))
+                try:
+                    may_be_killed[tmp_index].kill()
+                except:
+                    pass
