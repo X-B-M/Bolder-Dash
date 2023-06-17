@@ -9,7 +9,7 @@ from config import FieldConstants as FC
 class Hero(pygame.sprite.Sprite, BaseSprite):
 
     unitName = "rolobok"
-    unitCod = 8
+    unitCod = FC.HERO
     speed = 5
     direct = 0  # 0-no move,1-up,2-right,3-down,4-left
     arrmove = [[0, 0],
@@ -71,9 +71,7 @@ class Hero(pygame.sprite.Sprite, BaseSprite):
         self.cX1 = self.cX // FC.SIZE_CELL
         self.cY1 = self.cY // FC.SIZE_CELL
 
-        self.cX2 = self.cX1
-        self.cY2 = self.cY1
-
+        pygame.display.set_caption('Алмазов собрано: ' + str(self.collected_diamonds))
     def update(self, sp):
 
         if self.cX % FC.SIZE_CELL == 0 and self.cY % FC.SIZE_CELL == 0:
