@@ -71,6 +71,7 @@ class Hero(pygame.sprite.Sprite, BaseSprite):
         self.cX1 = self.cX // FC.SIZE_CELL
         self.cY1 = self.cY // FC.SIZE_CELL
 
+        pygame.display.set_caption('Алмазов собрано: ' + str(self.collected_diamonds))
     def update(self, sp):
 
         if self.cX % FC.SIZE_CELL == 0 and self.cY % FC.SIZE_CELL == 0:

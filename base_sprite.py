@@ -317,7 +317,7 @@ class BaseSprite:
                         # придаем камню слева имульс движения влево
                         forward_sprite.direct = 4
                 elif forward_sprite.unitCod == FC.DOOR:  # уходим в открытую дверь
-                    if forward_sprite:
+                    if forward_sprite.is_opened:
                         tmp = [[0, -1], [1, 0], [0, 1], [-1, 0]]  # для шага вперед
                         current_sprite.cX += current_sprite.speedX * tmp[current_sprite.direct - 1][0]
                         current_sprite.cY += current_sprite.speedY * tmp[current_sprite.direct - 1][1]
@@ -364,6 +364,7 @@ class BaseSprite:
         for i in sp:
             if i.unitCod == FC.DOOR:
                 i.set_imindex(1)
+                i.is_opened = True
 
     @staticmethod
     def spreading_magma(current_sprite, sprites_list):
@@ -371,26 +372,46 @@ class BaseSprite:
         tmp = [[0, -1], [1, 0], [0, 1], [-1, 0]]  # для шага вперед
         can_spreading = []
         may_be_killed = []
-        for d in range(1,5):
-            can_move = current_sprite.check_move(sprites_list, current_sprite.cX1, current_sprite.cY1, d)
-            if can_move > 0:
-                tmp_sprite = current_sprite.get_sprite_by_id(sprites_list, can_move)
+        current_sprite.pressureNonCritical -= 1
+        if current_sprite.pressureNonCritical <= 0:  # пора, превращаемся в камень
+            from Stone import Stone
+            for i in sprites_list:
+                if i.unitCod == FC.MAGMA:
+                    sprites_list.add(Stone(i.cX1, i.cY1))
+                    i.kill()
 
-                if tmp_sprite.unitCod in [FC.PLANE]:
-                    can_spreading.append((current_sprite.cX1 + tmp[d - 1][0],
-                                          current_sprite.cY1 + tmp[d - 1][1]))
-                    may_be_killed.append(tmp_sprite)
-            else:
-                can_spreading.append((current_sprite.cX1 + tmp[d - 1][0], current_sprite.cY1 + tmp[d - 1][1]))
+        if random.randint(0, 1000) > 998:
+            from Magma import Magma
+            for d in range(1,5):
+                can_move = current_sprite.check_move(sprites_list, current_sprite.cX1, current_sprite.cY1, d)
+                if can_move > 0:
+                    tmp_sprite = current_sprite.get_sprite_by_id(sprites_list, can_move)
 
-        if len(can_spreading) == 0: # вся магма заперта
-            # тут возжожно пора превращаться в алмазы
-            pass
-        else: # магма распространяется
-            if random.randint(0, 100) > 98:
-                from Magma import Magma
+                    if tmp_sprite.unitCod in [FC.PLANE]:
+                        can_spreading.append((current_sprite.cX1 + tmp[d - 1][0],
+                                              current_sprite.cY1 + tmp[d - 1][1]))
+                        may_be_killed.append(tmp_sprite)
+                else:
+                    can_spreading.append((current_sprite.cX1 + tmp[d - 1][0], current_sprite.cY1 + tmp[d - 1][1]))
+
+            if len(can_spreading) == 0: # вся магма заперта
+                current_sprite.pressureCritical = 1
+                if random.randint(0, 1000) > 0: # а не пора ли превратиться
+                    time_ch = 1
+                    for i in sprites_list:
+                        if i.unitCod == FC.MAGMA:
+                            time_ch = time_ch & i.pressureCritical
+                    if time_ch == 1: # пора, превращаемся
+                        from Diamond import Diamond
+                        for i in sprites_list:
+                            if i.unitCod == FC.MAGMA:
+                                sprites_list.add(Diamond(i.cX1,i.cY1))
+                                i.kill()
+
+            else: # магма распространяется
+
+                current_sprite.pressureCritical = 0
                 tmp_index = random.randint(0, len(can_spreading)-1)
-                #print(f'len(can_spreading)={len(can_spreading)}, tmp_index={tmp_index}')
                 sprites_list.add(Magma(can_spreading[tmp_index][0],
                                        can_spreading[tmp_index][1]))
                 try:

@@ -11,6 +11,8 @@ class Magma(pygame.sprite.Sprite, BaseSprite):
     cX1 = 0
     slippery = False  # скользкий, с него камни скатываются
     statusTimeLife = 0  # для отсчета номера картинки
+    pressureCritical = 0 # если вся магма заперта, то превращается в алмазы
+    pressureNonCritical = 10000 # если дойдет до нуля, то превратится в камень
     def get_imindex(self):
         return self.__imindex
 
