@@ -380,7 +380,7 @@ class BaseSprite:
                     sprites_list.add(Stone(i.cX1, i.cY1))
                     i.kill()
 
-        if random.randint(0, 1000) > 998:
+        if random.randint(0, 1000) > 988:
             from Magma import Magma
             for d in range(1,5):
                 can_move = current_sprite.check_move(sprites_list, current_sprite.cX1, current_sprite.cY1, d)
