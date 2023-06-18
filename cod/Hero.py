@@ -70,7 +70,8 @@ class Hero(pygame.sprite.Sprite, BaseSprite):
         self.cX1 = self.cX // FC.SIZE_CELL
         self.cY1 = self.cY // FC.SIZE_CELL
 
-        pygame.display.set_caption('Алмазов собрано: ' + str(self.collected_diamonds))
+        pygame.display.set_caption(
+            'Алмазов собрано: ' + str(self.collected_diamonds) + ' из ' + str(FC.CNT_WIN_DIAMOND))
     def update(self, sp):
 
         if self.cX % FC.SIZE_CELL == 0 and self.cY % FC.SIZE_CELL == 0:
@@ -104,7 +105,7 @@ class Hero(pygame.sprite.Sprite, BaseSprite):
 
         if self.collected_diamonds != self.collected_diamonds_prev:
             self.collected_diamonds_prev = self.collected_diamonds
-            pygame.display.set_caption('Алмазов собрано: ' + str(self.collected_diamonds))
+            pygame.display.set_caption('Алмазов собрано: ' + str(self.collected_diamonds)+' из '+str(FC.CNT_WIN_DIAMOND))
 
         self.__imindex = 1 & (self.__imindex + 1)
         self.image = self.images[self.arrmove[self.direct][self.__imindex]]

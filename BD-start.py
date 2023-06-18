@@ -47,9 +47,9 @@ class General:
         if event.type == QUIT:
             sys.exit()
         if event.type == USEREVENT:
-            game_location.pop(0)
-            if len(game_location)>0:
-                general.location = game_location[0]
+            if len(levels)>0:
+                general.location = Game_location(levels[0])
+                levels.pop(0)
             else:
                 general.location = exit_location
         if event.type == KEYUP:
@@ -81,7 +81,10 @@ class Start_location(Location):
     def event(self, event):
         if event.type == KEYDOWN:
             if event.key == 13:
-                general.location = game_location[0]
+                #general.location = game_location[0]
+                general.location = Game_location(levels[0])
+                levels.pop(0)
+
 
 
 class Exit_location(Location):
@@ -122,33 +125,39 @@ class Game_location(Location):
         f = open(par_map, 'r')
         tY = 0
         for line in f:
-            tX = 0
-            for l1 in line:
-                if l1 == "1":
-                    self.game_units.add(Wall(tX, tY, 1))
-                elif l1 == "2":
-                    self.game_units.add(Wall(tX, tY, 2))
-                elif l1 == "3":
-                    self.game_units.add(Plane(tX, tY))
-                elif l1 == "4":
-                    self.game_units.add(Stone(tX, tY))
-                elif l1 == "5":
-                    self.game_units.add(Diamond(tX, tY))
-                elif l1 == "6":
-                    self.game_units.add(MonsterBlank(tX, tY))
-                elif l1 == "7":
-                    self.game_units.add(MonsterDiamond(tX, tY))
-                elif l1 == "8":
-                    self.game_units.add(Hero(tX, tY))
-                elif l1 == "9":
-                    self.game_units.add(Door(tX, tY))
-                elif l1 == "A":
-                    self.game_units.add(Magma(tX, tY))
+            if line[0] == '~': #параметры для уровня
+                if "CNT_WIN_DIAMOND" in line:
+                    FC.CNT_WIN_DIAMOND = int(line[line.find("=")+1:])
+                elif "PRESSURE_NON_CRITICAL" in line:
+                    FC.PRESSURE_NON_CRITICAL = int(line[line.find("=")+1:])
+            else:
+                tX = 0
+                for l1 in line:
+                    if l1 == "1":
+                        self.game_units.add(Wall(tX, tY, 1))
+                    elif l1 == "2":
+                        self.game_units.add(Wall(tX, tY, 2))
+                    elif l1 == "3":
+                        self.game_units.add(Plane(tX, tY))
+                    elif l1 == "4":
+                        self.game_units.add(Stone(tX, tY))
+                    elif l1 == "5":
+                        self.game_units.add(Diamond(tX, tY))
+                    elif l1 == "6":
+                        self.game_units.add(MonsterBlank(tX, tY))
+                    elif l1 == "7":
+                        self.game_units.add(MonsterDiamond(tX, tY))
+                    elif l1 == "8":
+                        self.game_units.add(Hero(tX, tY))
+                    elif l1 == "9":
+                        self.game_units.add(Door(tX, tY))
+                    elif l1 == "A":
+                        self.game_units.add(Magma(tX, tY))
 
-                #  else:
-                #     self.game_units.add(BlankField(tX,tY))
-                tX += 1
-            tY += 1
+                    #  else:
+                    #     self.game_units.add(BlankField(tX,tY))
+                    tX += 1
+                tY += 1
 
         f.close()#        keys = pygame.key.get_pressed()
 
@@ -162,10 +171,13 @@ class Game_location(Location):
 general = General()
 
 start_location = Start_location()
-game_location =[]
-game_location.append(Game_location('maps/map01.txt'))
-game_location.append(Game_location('maps/map02.txt'))
-game_location.append(Game_location('maps/map03.txt'))
+levels = ['maps/map01.txt',
+          'maps/map02.txt',
+          'maps/map03.txt']
+#game_location =['maps/map01.txt']
+#game_location.append(Game_location('maps/map01.txt'))
+#game_location.append(Game_location('maps/map02.txt'))
+#game_location.append(Game_location('maps/map03.txt'))
 exit_location = Exit_location()
 
 general.location = start_location

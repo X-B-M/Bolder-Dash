@@ -18,6 +18,8 @@ class FieldConstants:
     DOOR = 9
     MAGMA = 10
 
+    CNT_WIN_DIAMOND = 10 # количество собранных алмазов для выхода из уровня
+    PRESSURE_NON_CRITICAL = 1500 # интервал до превращения магмы  в камень
 
 def set_sprite_id() -> int:
     for i in range(1, FieldConstants.CNT_MAX_SPRITE):

@@ -296,7 +296,7 @@ class BaseSprite:
                     current_sprite.collected_diamonds +=1
 
                     forward_sprite.kill()
-                    if current_sprite.collected_diamonds >= 10:
+                    if current_sprite.collected_diamonds >= FC.CNT_WIN_DIAMOND:
                         # открываем дверь
                         current_sprite.door_opened(sprites_list)
 
@@ -378,8 +378,8 @@ class BaseSprite:
         tmp = [[0, -1], [1, 0], [0, 1], [-1, 0]]  # для шага вперед
         can_spreading = []
         may_be_killed = []
-        current_sprite.pressureNonCritical -= 1
-        if current_sprite.pressureNonCritical <= 0:  # пора, превращаемся в камень
+        current_sprite.pressureNonCritical += 1
+        if current_sprite.pressureNonCritical >= FC.PRESSURE_NON_CRITICAL:  # пора, превращаемся в камень
             from Stone import Stone
             for i in sprites_list:
                 if i.unitCod == FC.MAGMA:
