@@ -1,22 +1,15 @@
 #! /usr/bin/python3
 # -*- coding: utf-8 -*-
 import sys
-import pygame
-from pygame.locals import *
-from config import FieldConstants as FC
 
-
-from Wall import *
-from Plane import *
-from Stone import *
-from MonsterBlank import *
-from MonsterDiamond import *
-from Hero import *
-from Diamond import *
-from Explosiv import *
-from BlankField import *
-from Door import *
-from Magma import *
+from cod.Wall import *
+from cod.Plane import *
+from cod.Stone import *
+from cod.MonsterBlank import *
+from cod.MonsterDiamond import *
+from cod.Hero import *
+from cod.Door import *
+from cod.Magma import *
 
 class Location(object):
     def __init__(self):
@@ -170,9 +163,9 @@ general = General()
 
 start_location = Start_location()
 game_location =[]
-game_location.append(Game_location('map01.txt'))
-game_location.append(Game_location('map02.txt'))
-game_location.append(Game_location('map03.txt'))
+game_location.append(Game_location('maps/map01.txt'))
+game_location.append(Game_location('maps/map02.txt'))
+game_location.append(Game_location('maps/map03.txt'))
 exit_location = Exit_location()
 
 general.location = start_location

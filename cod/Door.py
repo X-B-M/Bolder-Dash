@@ -1,7 +1,7 @@
 import pygame
 from pygame.locals import *
-from config import FieldConstants as FC, itera_id
-from base_sprite import BaseSprite
+from config import FieldConstants as FC
+from cod.base_sprite import BaseSprite
 
 class Door(pygame.sprite.Sprite, BaseSprite):
     slippery = False  # не скользкий, с него камни не скатываются

@@ -1,8 +1,6 @@
-from BlankField import *
-from Explosiv import *
 from Diamond import *
 from config import FieldConstants as FC
-from base_sprite import BaseSprite
+from cod.base_sprite import BaseSprite
 
 class Magma(pygame.sprite.Sprite, BaseSprite):
     speedX = 5
@@ -11,8 +9,8 @@ class Magma(pygame.sprite.Sprite, BaseSprite):
     cX1 = 0
     slippery = False  # скользкий, с него камни скатываются
     statusTimeLife = 0  # для отсчета номера картинки
-    pressureCritical = 0 # если вся магма заперта, то превращается в алмазы
-    pressureNonCritical = 10000 # если дойдет до нуля, то превратится в камень
+    pressureCritical = 0 # признак того, что если вся магма заперта (потенциально готова к превращанию в алмазы
+    pressureNonCritical = 1500 # если дойдет до нуля, то превратится в камень
     def get_imindex(self):
         return self.__imindex
 

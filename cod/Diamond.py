@@ -1,10 +1,5 @@
-import pygame
-from pygame.locals import *
-
-from BlankField import *
 from Explosiv import *
-from base_sprite import BaseSprite
-from config import itera_id
+from cod.base_sprite import BaseSprite
 
 
 class Diamond(pygame.sprite.Sprite, BaseSprite):

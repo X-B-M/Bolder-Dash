@@ -1,8 +1,7 @@
-import pygame
 from pygame.locals import *
-from config import FieldConstants as fc, itera_id
-from BlankField import *
-from base_sprite import BaseSprite
+from config import FieldConstants as fc
+from cod.BlankField import *
+from cod.base_sprite import BaseSprite
 
 
 class MonsterDiamond(pygame.sprite.Sprite, BaseSprite):

@@ -1,8 +1,7 @@
-import pygame
 from pygame.locals import *
 
 from BlankField import *
-from base_sprite import BaseSprite
+from cod.base_sprite import BaseSprite
 from config import FieldConstants as FC
 
 

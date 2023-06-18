@@ -357,7 +357,13 @@ class BaseSprite:
                 forward_sprite.kill()
                 sprites_list.add(BlankField(current_sprite.cX1 + tmp[direct_dig - 1][0],
                                             current_sprite.cY1 + tmp[direct_dig - 1][1],FC.LENGTH_OF_LIFE*2))
-
+            if forward_sprite.unitCod == FC.DIAMOND:  # съедаем квант поля
+                from BlankField import BlankField
+                tmp = [[0, -1], [1, 0], [0, 1], [-1, 0]]  # для шага вперед
+                forward_sprite.kill()
+                sprites_list.add(BlankField(current_sprite.cX1 + tmp[direct_dig - 1][0],
+                                            current_sprite.cY1 + tmp[direct_dig - 1][1]))
+                current_sprite.collected_diamonds += 1
 
     @staticmethod
     def door_opened(sp):

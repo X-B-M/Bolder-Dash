@@ -1,8 +1,6 @@
-from BlankField import *
-from Explosiv import *
-from Diamond import *
+from cod.Diamond import *
 from config import FieldConstants as FC
-from base_sprite import BaseSprite
+from cod.base_sprite import BaseSprite
 
 class Stone(pygame.sprite.Sprite, BaseSprite):
     speedX = 5

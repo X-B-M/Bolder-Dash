@@ -1,26 +1,21 @@
 import pygame
-
-from base_sprite import BaseSprite
-
 from config import FieldConstants as FC
+from cod.base_sprite import BaseSprite
 
-
-class BlankField(pygame.sprite.Sprite, BaseSprite):
-    time_to_live = FC.SIZE_CELL
-    speed_live = 5
+class Plane(pygame.sprite.Sprite, BaseSprite):
     slippery = False  # не скользкий, с него камни не скатываются
 
     def get_imindex(self): return self.__imindex
 
     def set_imindex(self, value): self.__imindex = value
 
-    def __init__(self, parX, parY, parTTL=FC.LENGTH_OF_LIFE):
-        self.time_to_live = parTTL
-        self.id = -1  # здесь id возможно не нужен
+    def __init__(self, parX, parY):
+
+        self.id = self.set_id()
 
         pygame.sprite.Sprite.__init__(self)
         self.images = []
-        image = pygame.image.load('img/blank.png').convert()
+        image = pygame.image.load('img/plane.png').convert()
         self.images.append(image)
 
         self.__imindex = 0
@@ -33,18 +28,14 @@ class BlankField(pygame.sprite.Sprite, BaseSprite):
         self.cX1 = self.cX // FC.SIZE_CELL
         self.cY1 = self.cY // FC.SIZE_CELL
 
-        self.unitName = "blank"
-        self.unitCod = FC.BLANKFIELD
-
-    def update(self, sp):
-        self.time_to_live -= self.speed_live
-        if self.time_to_live <= 0:
-            self.kill()
+        self.unitName = "plane"
+        self.unitCod = FC.PLANE
         self.rect.x = self.cX
         self.rect.y = self.cY
 
+    def update(self, sp):
         # self.image = self.images[self.__imindex]
+        pass
 
     def draw(self, window):
-        pass
-    # window.blit(self.image,(self.cX,self.cY))
+        window.blit(self.image, (self.cX, self.cY))

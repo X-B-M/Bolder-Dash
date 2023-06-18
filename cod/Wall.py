@@ -1,8 +1,8 @@
 import pygame
 from pygame.locals import *
 
-from base_sprite import BaseSprite
-from config import FieldConstants as FC, itera_id
+from cod.base_sprite import BaseSprite
+from config import FieldConstants as FC
 
 
 class Wall(pygame.sprite.Sprite, BaseSprite):

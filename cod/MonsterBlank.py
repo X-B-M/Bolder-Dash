@@ -1,7 +1,6 @@
-import pygame
 from pygame.locals import *
-from config import FieldConstants as fc, itera_id
-from BlankField import *
+from config import FieldConstants as fc
+from cod.BlankField import *
 
 
 class MonsterBlank(pygame.sprite.Sprite, BaseSprite):
