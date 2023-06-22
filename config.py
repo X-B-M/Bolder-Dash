@@ -5,6 +5,20 @@ class FieldConstants:
     CNT_MAX_SPRITE = 2000000000
     LENGTH_OF_LIFE = 40
 
+    D_UP_L   = 0  #схема кодирования направлений движения
+    D_UP     = 1  #   [D_UP_L]    [D_UP]    [D_UP_R]
+    D_UP_R   = 2  #   [D_LEFT]   [D_STOP]  [D_RIGHT]
+    D_LEFT   = 3  #   [D_DOWN_L] [D_DOWN] [D_DOWN_R]
+    D_STOP   = 4  #
+    D_RIGHT  = 5  #
+    D_DOWN_L = 6  #
+    D_DOWN   = 7  #
+    D_DOWN_R = 8  #
+    DIRECTION=[D_UP_L,D_UP,D_UP_R,D_LEFT,D_STOP,D_RIGHT,D_DOWN_L,D_DOWN,D_DOWN_R]
+
+    EMPTYPLACE = -1
+
+    EMPTYSPRITE = -1
     EXPLOSIVE = 0
     BLANKFIELD = 0
     WALL_STEEL = 1

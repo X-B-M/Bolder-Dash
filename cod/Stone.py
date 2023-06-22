@@ -1,3 +1,5 @@
+import pygame.sprite
+
 from cod.Diamond import *
 from config import FieldConstants as FC
 from cod.base_sprite import BaseSprite
@@ -9,7 +11,7 @@ class Stone(pygame.sprite.Sprite, BaseSprite):
     cX1 = 0
     kinect_energy = 0  # 'энергия удара. Двинулись - накопили 8. Стоим - убывает на 1 до 0
     slippery = True  # скользкий, с него камни скатываются
-    direct = 3
+    direct = FC.D_DOWN
 
     def get_imindex(self):
         return self.__imindex
@@ -42,7 +44,6 @@ class Stone(pygame.sprite.Sprite, BaseSprite):
         self.__imindex = 0
 
         self.image = self.images[self.__imindex]
-        self.rect = image.get_rect()
         self.cX = parX * FC.SIZE_CELL  # random.randint(0,general.sizeFieldX-60)//60*60
 
         self.cY = parY * FC.SIZE_CELL  # random.randint(0,general.sizeFieldY-60)//60*60
@@ -50,10 +51,19 @@ class Stone(pygame.sprite.Sprite, BaseSprite):
         self.cX1 = self.cX // FC.SIZE_CELL
         self.cY1 = self.cY // FC.SIZE_CELL
 
+        self.rect = image.get_rect()
+        self.rect.x = self.cX
+        self.rect.y = self.cY
+        # self.rect.width = 1 + FC.SIZE_CELL + 1
+        # self.rect.height = 1 + FC.SIZE_CELL + 1
+
         self.unitName = "stone"
         self.unitCod = FC.STONE
 
     def update(self, sp):
+        # a=pygame.sprite.spritecollide(self, sp, False, collided=pygame.sprite.collide_rect_ratio(1.10))
+        # for i in a:
+        #     print(i)
 
         self.fall_and_slippery(self, sp)
 

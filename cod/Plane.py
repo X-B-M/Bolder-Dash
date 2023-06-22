@@ -30,8 +30,8 @@ class Plane(pygame.sprite.Sprite, BaseSprite):
 
         self.unitName = "plane"
         self.unitCod = FC.PLANE
-        self.rect.x = self.cX
-        self.rect.y = self.cY
+        self.rect.x = self.cX-1
+        self.rect.y = self.cY-1
 
     def update(self, sp):
         # self.image = self.images[self.__imindex]

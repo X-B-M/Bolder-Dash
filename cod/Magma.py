@@ -11,15 +11,15 @@ class Magma(pygame.sprite.Sprite, BaseSprite):
     statusTimeLife = 0  # для отсчета номера картинки
     pressureCritical = 0 # признак того, что если вся магма заперта (потенциально готова к превращанию в алмазы
     pressureNonCritical = 0 # по достижению  FC.PRESSURE_NON_CRITICAL превращаемся в камень
-
+    spreading_chance = 0 # шанс распространится
     def get_imindex(self):
         return self.__imindex
 
     def set_imindex(self, value):
         self.__imindex = value
 
-    def __init__(self, parX, parY):
-
+    def __init__(self, parX, parY, par_spreading_chance=988):
+        self.spreading_chance = par_spreading_chance
         self.id = self.set_id()
 
         pygame.sprite.Sprite.__init__(self)

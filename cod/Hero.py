@@ -10,12 +10,10 @@ class Hero(pygame.sprite.Sprite, BaseSprite):
     unitName = "rolobok"
     unitCod = FC.HERO
     speed = 5
-    direct = 0  # 0-no move,1-up,2-right,3-down,4-left
-    arrmove = [[0, 0],
-               [5, 6],
-               [3, 4],
-               [5, 6],
-               [1, 2]]
+    direct = FC.D_STOP
+    arrmove = [[0, 0], [5, 6], [0, 0],
+               [1, 2], [0, 0], [3, 4],
+               [0, 0], [5, 6], [0, 0]]
     speedX = 5
     speedY = 5
     slippery = False
@@ -79,24 +77,24 @@ class Hero(pygame.sprite.Sprite, BaseSprite):
             keys = pygame.key.get_pressed()
             if keys[pygame.K_RIGHT] and (keys[K_SPACE] or keys[K_LSHIFT]):
                 # копаем справа
-                self.dig_plane(self, sp, 2)
+                self.dig_plane(self, sp, FC.D_RIGHT)
             elif keys[pygame.K_LEFT] and (keys[K_SPACE] or keys[K_LSHIFT]):
                 # копаем слева
-                self.dig_plane(self, sp, 4)
+                self.dig_plane(self, sp, FC.D_LEFT)
             elif keys[pygame.K_UP] and (keys[K_SPACE] or keys[K_LSHIFT]):
                 # копаем вверх
-                self.dig_plane(self, sp, 1)
+                self.dig_plane(self, sp, FC.D_UP)
             elif keys[pygame.K_DOWN] and (keys[K_SPACE] or keys[K_LSHIFT]):
                 # копаем вниз
-                self.dig_plane(self, sp, 3)
+                self.dig_plane(self, sp, FC.D_DOWN)
             elif keys[K_LEFT]:
-                self.direct = 4
+                self.direct = FC.D_LEFT
             elif keys[K_RIGHT]:
-                self.direct = 2
+                self.direct = FC.D_RIGHT
             elif keys[K_UP]:
-                self.direct = 1
+                self.direct = FC.D_UP
             elif keys[K_DOWN]:
-                self.direct = 3
+                self.direct = FC.D_DOWN
 
             else:
                 self.direct = 0

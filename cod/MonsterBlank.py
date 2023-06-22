@@ -12,7 +12,7 @@ class MonsterBlank(pygame.sprite.Sprite, BaseSprite):
     cX2 = 0
     status = 0
     direct = 3
-    direct_list = [1, 2, 3, 4]  # двигаемся по правилу левой руки.
+    direct_list = [FC.D_UP,FC.D_RIGHT, FC.D_DOWN,FC.D_LEFT]  # двигаемся по правилу левой руки.
     slippery = False  # скользкий, с него камни скатываются
     prev_status = 0  # информация о том, в прошлой итерции обект двигался (1,2,3,4)
     statusTimeLife = 0  # Время движения в заданном направлении

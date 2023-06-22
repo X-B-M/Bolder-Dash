@@ -1,6 +1,7 @@
 #! /usr/bin/python3
 # -*- coding: utf-8 -*-
 import sys
+import os
 
 from cod.Wall import *
 from cod.Plane import *
@@ -10,6 +11,7 @@ from cod.MonsterDiamond import *
 from cod.Hero import *
 from cod.Door import *
 from cod.Magma import *
+
 
 class Location(object):
     def __init__(self):
@@ -167,17 +169,14 @@ class Game_location(Location):
         self.game_units.update(self.game_units)
         self.game_units.draw(self.window)
 
+class MyGroup(pygame.sprite.Group):
+    pass
 
 general = General()
 
 start_location = Start_location()
-levels = ['maps/map01.txt',
-          'maps/map02.txt',
-          'maps/map03.txt']
-#game_location =['maps/map01.txt']
-#game_location.append(Game_location('maps/map01.txt'))
-#game_location.append(Game_location('maps/map02.txt'))
-#game_location.append(Game_location('maps/map03.txt'))
+levels = ['maps/'+i for i in os.listdir('maps')]
+levels.sort()
 exit_location = Exit_location()
 
 general.location = start_location
@@ -191,4 +190,4 @@ while 1:
 
     general.location.draw()
     pygame.display.flip()
-    clock.tick(30)
+    clock.tick(15)

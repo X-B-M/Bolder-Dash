@@ -14,9 +14,9 @@ class BlankField(pygame.sprite.Sprite, BaseSprite):
 
     def set_imindex(self, value): self.__imindex = value
 
-    def __init__(self, parX, parY, parTTL=FC.LENGTH_OF_LIFE):
+    def __init__(self, parX, parY, parTTL=FC.LENGTH_OF_LIFE, parId = 0):
         self.time_to_live = parTTL
-        self.id = -1  # здесь id возможно не нужен
+        self.id = parId  # здесь id возможно не нужен
 
         pygame.sprite.Sprite.__init__(self)
         self.images = []
@@ -25,7 +25,11 @@ class BlankField(pygame.sprite.Sprite, BaseSprite):
 
         self.__imindex = 0
         self.image = self.images[self.__imindex]
-        self.rect = image.get_rect()
+
+        self.rect = pygame.Rect(parX, parY, FC.SIZE_CELL, FC.SIZE_CELL)
+        # Rect(left, top, width, height) -> Rect
+        # Rect((left, top), (width, height)) -> Rect
+        # Rect(object) -> Rect
 
         self.cX = parX * FC.SIZE_CELL  # random.randint(0,general.sizeFieldX-60)//60*60
         self.cY = parY * FC.SIZE_CELL  # random.randint(0,general.sizeFieldY-60)//60*60

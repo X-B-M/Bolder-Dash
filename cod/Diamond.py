@@ -7,7 +7,7 @@ class Diamond(pygame.sprite.Sprite, BaseSprite):
     speedY = 5
     cY1 = 0
     cX1 = 0
-    direct = 3
+    direct = FC.D_DOWN
     slippery = True  # скользкий, с него камни скатываются
     kinect_energy = 0
     statusTimeLife = 0  # для отсчета номера картинки
