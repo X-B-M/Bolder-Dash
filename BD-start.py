@@ -25,7 +25,6 @@ class Location(object):
 
 
 class General:
-    
     level = 0
     music = 0
     sizeFieldX = FC.SIZEFIELD_X * FC.SIZE_CELL
@@ -49,7 +48,7 @@ class General:
         if event.type == QUIT:
             sys.exit()
         if event.type == USEREVENT:
-            if len(levels)>0:
+            if len(levels) > 0:
                 general.location = Game_location(levels[0])
                 levels.pop(0)
             else:
@@ -73,9 +72,8 @@ class Start_location(Location):
         self.background = pygame.transform.scale(background, self.window.get_size())
         font = pygame.font.Font(None, 36)
         text = font.render("press Enter to start", True, (10, 10, 10))
-        textpos = text.get_rect(center=(FC.SIZEFIELD_X*FC.SIZE_CELL/2, FC.SIZEFIELD_Y*FC.SIZE_CELL/2))
+        textpos = text.get_rect(center=(FC.SIZEFIELD_X * FC.SIZE_CELL / 2, FC.SIZEFIELD_Y * FC.SIZE_CELL / 2))
         self.background.blit(text, textpos)
-
 
     def draw(self):
         self.window.blit(self.background, (0, 0))
@@ -83,10 +81,9 @@ class Start_location(Location):
     def event(self, event):
         if event.type == KEYDOWN:
             if event.key == 13:
-                #general.location = game_location[0]
+                # general.location = game_location[0]
                 general.location = Game_location(levels[0])
                 levels.pop(0)
-
 
 
 class Exit_location(Location):
@@ -103,12 +100,12 @@ class Exit_location(Location):
         self.background.fill((0, 200, 200))
         font = pygame.font.Font(None, 36)
 
-        #score = font.render("your level: " + str(general.level), True, (20, 20, 20))
-        #scorepos = score.get_rect(center=(320, 150))
-        #self.background.blit(score, scorepos)
+        # score = font.render("your level: " + str(general.level), True, (20, 20, 20))
+        # scorepos = score.get_rect(center=(320, 150))
+        # self.background.blit(score, scorepos)
 
         text = font.render("press Esc key to exit", True, (10, 10, 10))
-        textpos = text.get_rect(center=(FC.SIZEFIELD_X*FC.SIZE_CELL/2, FC.SIZEFIELD_Y*FC.SIZE_CELL/2))
+        textpos = text.get_rect(center=(FC.SIZEFIELD_X * FC.SIZE_CELL / 2, FC.SIZEFIELD_Y * FC.SIZE_CELL / 2))
 
         self.background.blit(text, textpos)
         self.window.blit(self.background, (0, 0))
@@ -124,58 +121,96 @@ class Game_location(Location):
         #        pygame.image.save(big_surf, 'day1.png')
         self.background = big_surf
         self.game_units = pygame.sprite.Group()
+        self.arr_sprites = ArrSprite()
         f = open(par_map, 'r')
         tY = 0
         for line in f:
-            if line[0] == '~': #параметры для уровня
+            if line[0] == '~':  # параметры для уровня
                 if "CNT_WIN_DIAMOND" in line:
-                    FC.CNT_WIN_DIAMOND = int(line[line.find("=")+1:])
+                    FC.CNT_WIN_DIAMOND = int(line[line.find("=") + 1:])
                 elif "PRESSURE_NON_CRITICAL" in line:
-                    FC.PRESSURE_NON_CRITICAL = int(line[line.find("=")+1:])
+                    FC.PRESSURE_NON_CRITICAL = int(line[line.find("=") + 1:])
             else:
                 tX = 0
                 for l1 in line:
                     if l1 == "1":
-                        self.game_units.add(Wall(tX, tY, 1))
+                        tmp = Wall(tX, tY, 1)
+                        self.arr_sprites.store(tmp)
+                        self.game_units.add(tmp)
+                        # self.game_units.add(self.arr_sprites.store(Wall(tX, tY, 1))
                     elif l1 == "2":
-                        self.game_units.add(Wall(tX, tY, 2))
+                         tmp = Wall(tX, tY, 2)
+                         self.arr_sprites.store(tmp)
+                         self.game_units.add(tmp)
                     elif l1 == "3":
-                        self.game_units.add(Plane(tX, tY))
+                        tmp = Plane(tX, tY)
+                        self.arr_sprites.store(tmp)
+                        self.game_units.add(tmp)
                     elif l1 == "4":
-                        self.game_units.add(Stone(tX, tY))
+                        tmp = Stone(tX, tY)
+                        self.arr_sprites.store(tmp)
+                        self.game_units.add(tmp)
                     elif l1 == "5":
-                        self.game_units.add(Diamond(tX, tY))
+                        tmp = Diamond(tX, tY)
+                        self.arr_sprites.store(tmp)
+                        self.game_units.add(tmp)
                     elif l1 == "6":
-                        self.game_units.add(MonsterBlank(tX, tY))
+                        tmp = MonsterBlank(tX, tY)
+                        self.arr_sprites.store(tmp)
+                        self.game_units.add(tmp)
                     elif l1 == "7":
-                        self.game_units.add(MonsterDiamond(tX, tY))
+                        tmp = MonsterDiamond(tX, tY)
+                        self.arr_sprites.store(tmp)
+                        self.game_units.add(tmp)
                     elif l1 == "8":
-                        self.game_units.add(Hero(tX, tY))
+                        tmp = Hero(tX, tY)
+                        self.arr_sprites.store(tmp)
+                        self.game_units.add(tmp)
                     elif l1 == "9":
-                        self.game_units.add(Door(tX, tY))
+                        tmp = Door(tX, tY)
+                        self.arr_sprites.store(tmp)
+                        self.game_units.add(tmp)
                     elif l1 == "A":
-                        self.game_units.add(Magma(tX, tY))
+                        tmp = Magma(tX, tY)
+                        self.arr_sprites.store(tmp)
+                        self.game_units.add(tmp)
 
                     #  else:
                     #     self.game_units.add(BlankField(tX,tY))
                     tX += 1
                 tY += 1
 
-        f.close()#        keys = pygame.key.get_pressed()
+        f.close()  # keys = pygame.key.get_pressed()
 
     def draw(self):
 
         self.window.blit(self.background, (0, 0))
-        self.game_units.update(self.game_units)
+
+        self.arr_sprites.clear()
+        for i in self.game_units:
+            self.arr_sprites.store(i)
+            # if i.unitCod == 8:
+            #     print(f'Hero Y={i.cY}')
+        self.game_units.update(self.game_units, self.arr_sprites)
         self.game_units.draw(self.window)
 
-class MyGroup(pygame.sprite.Group):
-    pass
+
+class ArrSprite():
+    map = []
+
+    def __init__(self):
+        self.map = [[None for i in range(FC.SIZEFIELD_Y)] for j in range(FC.SIZEFIELD_X)]
+
+    def store(self, parSprite):
+        self.map[parSprite.cX1][parSprite.cY1] = parSprite
+
+    def clear(self):
+        self.map = [[None for i in range(FC.SIZEFIELD_Y)] for j in range(FC.SIZEFIELD_X)]
 
 general = General()
 
 start_location = Start_location()
-levels = ['maps/'+i for i in os.listdir('maps')]
+levels = ['maps/' + i for i in os.listdir('maps')]
 levels.sort()
 exit_location = Exit_location()
 
@@ -190,4 +225,4 @@ while 1:
 
     general.location.draw()
     pygame.display.flip()
-    clock.tick(15)
+    clock.tick(30)

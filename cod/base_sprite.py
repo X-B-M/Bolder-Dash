@@ -18,6 +18,12 @@ class LocalGroupList(list):
             return self[direction].unitCod
         except:
             return -1
+    def get_slippery(self, direction):
+        try:
+            return self[direction].slippery
+        except:
+            return False
+
     def get_kinect_energy(self, direction):
         try:
             return self[direction].kinect_energy
@@ -105,17 +111,17 @@ class BaseSprite:
         return 0
 
     @staticmethod
-    def create_local_group(current_sprite, sprites_list) -> LocalGroupList:
-        sp_list_of_collide = pygame.sprite.spritecollide(current_sprite, sprites_list, False, collided=pygame.sprite.collide_rect_ratio(1.10))
-        c_l_g = LocalGroupList([None for i in FC.DIRECTION])
-        tmp = [[-1, -1], [0, -1], [+1, -1],
-               [-1, 0], [0, 0], [+1, 0],
-               [-1, +1], [0, +1], [+1, +1]]
-        for i in sp_list_of_collide:
-            for direction in FC.DIRECTION:
-                if current_sprite.cX1 + tmp[direction][0] == i.cX1 and current_sprite.cY1 + tmp[direction][1] == i.cY1:
-                    c_l_g[direction] = i
-                    break
+    # def create_local_group(current_sprite, sprites_list) -> LocalGroupList:
+    #     sp_list_of_collide = pygame.sprite.spritecollide(current_sprite, sprites_list, False, collided=pygame.sprite.collide_rect_ratio(1.10))
+    #     c_l_g = LocalGroupList([None for i in FC.DIRECTION])
+    #     tmp = [[-1, -1], [0, -1], [+1, -1],
+    #            [-1, 0], [0, 0], [+1, 0],
+    #            [-1, +1], [0, +1], [+1, +1]]
+    #     for i in sp_list_of_collide:
+    #         for direction in FC.DIRECTION:
+    #             if current_sprite.cX1 + tmp[direction][0] == i.cX1 and current_sprite.cY1 + tmp[direction][1] == i.cY1:
+    #                 c_l_g[direction] = i
+    #                 break
         # s = pygame.sprite.GroupSingle()
         # for direction in range(9):
         #      if isinstance(c_l_g[direction],None.__class__):
@@ -124,12 +130,20 @@ class BaseSprite:
         #          for j in s:
         #             c_l_g[direction] = j
                   # время жизни этого спрайта минимально, его id=0
+        # return c_l_g
+    def create_local_group_arr(current_sprite, arr_sp) -> LocalGroupList:
+        tmp_c_l_g = [None for i in FC.DIRECTION]
+        tmp = [[-1, -1], [0, -1], [+1, -1],
+               [-1, 0], [0, 0], [+1, 0],
+               [-1, +1], [0, +1], [+1, +1]]
+        for direction in FC.DIRECTION:
+            tmp_c_l_g[direction] = arr_sp.map[current_sprite.cX1 + tmp[direction][0]][current_sprite.cY1 + tmp[direction][1]]
+        c_l_g = LocalGroupList(tmp_c_l_g)
         return c_l_g
 
     @staticmethod
-    def fall_and_slippery(current_sprite, sprites_list):
-
-        local_group = BaseSprite.create_local_group(current_sprite, sprites_list)
+    def fall_and_slippery(current_sprite, sprites_list, arr_sp):
+        local_group = BaseSprite.create_local_group_arr(current_sprite, arr_sp)
         if current_sprite.kinect_energy > 0 and current_sprite.direct == FC.D_DOWN:
             # можем взорвать что-то внизу, если падаем
             if local_group.get_unitCod(FC.D_DOWN) in [FC.MONSTERBLANK, FC.MONSTERDIAMOND, FC.HERO]:
@@ -139,40 +153,51 @@ class BaseSprite:
                     BaseSprite.explosiv_sprite(sprites_list, local_group.get_id(FC.D_DOWN))
 
         if current_sprite.cX % FC.SIZE_CELL == 0 and current_sprite.cY % FC.SIZE_CELL == 0:  # можно ли начать двигаться в текущем  направлении
-            # проверим, нет ли коллизии
+            current_sprite.direct == FC.D_DOWN
             from BlankField import BlankField
-            # can_move = current_sprite.check_move(sprites_list, current_sprite.cX1, current_sprite.cY1,
-            #                                      current_sprite.direct)
-            # can_move = local_group[current_sprite.direct].id
-            # can_move = local_group.get_id(FC.D_DOWN)
 
             # if can_move == 0 and current_sprite.direct == FC.D_DOWN:  # падаем вниз
             if local_group.get_id(FC.D_DOWN) == FC.EMPTYSPRITE and current_sprite.direct == FC.D_DOWN:  # падаем вниз
-                sprites_list.add(BlankField(current_sprite.cX1, current_sprite.cY1 + 1))
+                tmp_add_blank_field = BlankField(current_sprite.cX1, current_sprite.cY1 + 1)
+                arr_sp.store(tmp_add_blank_field)
+                sprites_list.add(tmp_add_blank_field)
                 current_sprite.cY += current_sprite.speedY
                 current_sprite.cY1 = current_sprite.cY // FC.SIZE_CELL
                 current_sprite.kinect_energy = 8
 
             elif local_group.get_id(FC.D_RIGHT) == FC.EMPTYSPRITE and current_sprite.direct == FC.D_RIGHT:  # толкают вправо
-                sprites_list.add(BlankField(current_sprite.cX1 + 1, current_sprite.cY1))
+
+                tmp_add_blank_field = BlankField(current_sprite.cX1 + 1, current_sprite.cY1)
+                arr_sp.store(tmp_add_blank_field)
+                sprites_list.add(tmp_add_blank_field)
+
                 current_sprite.cX += current_sprite.speedX
                 current_sprite.cX1 = current_sprite.cX // FC.SIZE_CELL
                 current_sprite.kinect_energy = 8
 
             elif local_group.get_id(FC.D_LEFT) == FC.EMPTYSPRITE and current_sprite.direct == FC.D_LEFT:  # толкают влево
-                sprites_list.add(BlankField(current_sprite.cX1 - 1, current_sprite.cY1))
+                tmp_add_blank_field = BlankField(current_sprite.cX1 - 1, current_sprite.cY1)
+                arr_sp.store(tmp_add_blank_field)
+                sprites_list.add(tmp_add_blank_field)
+
                 current_sprite.cX -= current_sprite.speedX
                 current_sprite.cX1 = current_sprite.cX // FC.SIZE_CELL
                 current_sprite.kinect_energy = 8
 
             else:  # пробуем соскальзнуть вправо или влево
                 #forward_sprite = current_sprite.get_sprite_by_id(sprites_list, can_move)
-                if local_group[FC.D_DOWN].slippery:
+                if local_group.get_slippery(FC.D_DOWN):
                     can_moveRight = local_group.get_id(FC.D_RIGHT)
                     can_moveDownR = local_group.get_id(FC.D_DOWN_R)
                     if can_moveRight == FC.EMPTYSPRITE and can_moveDownR == FC.EMPTYSPRITE:
-                        sprites_list.add(BlankField(current_sprite.cX1 + 1, current_sprite.cY1))
-                        sprites_list.add(BlankField(current_sprite.cX1 + 1, current_sprite.cY1 + 1))
+                        tmp_add_blank_field = BlankField(current_sprite.cX1 + 1, current_sprite.cY1)
+                        arr_sp.store(tmp_add_blank_field)
+                        sprites_list.add(tmp_add_blank_field)
+
+                        tmp_add_blank_field = BlankField(current_sprite.cX1 + 1, current_sprite.cY1 + 1)
+                        arr_sp.store(tmp_add_blank_field)
+                        sprites_list.add(tmp_add_blank_field)
+
                         current_sprite.cX += current_sprite.speedX
                         current_sprite.cX1 = current_sprite.cX // FC.SIZE_CELL
                         current_sprite.direct = FC.D_RIGHT
@@ -181,8 +206,14 @@ class BaseSprite:
                         can_moveLeft = local_group.get_id(FC.D_LEFT)
                         can_moveDownL = local_group.get_id(FC.D_DOWN_L)
                         if can_moveLeft == FC.EMPTYSPRITE and can_moveDownL == FC.EMPTYSPRITE:
-                            sprites_list.add(BlankField(current_sprite.cX1 - 1, current_sprite.cY1))
-                            sprites_list.add(BlankField(current_sprite.cX1 - 1, current_sprite.cY1 + 1))
+                            tmp_add_blank_field = BlankField(current_sprite.cX1 - 1, current_sprite.cY1)
+                            arr_sp.store(tmp_add_blank_field)
+                            sprites_list.add(tmp_add_blank_field)
+
+                            tmp_add_blank_field = BlankField(current_sprite.cX1 - 1, current_sprite.cY1 + 1)
+                            arr_sp.store(tmp_add_blank_field)
+                            sprites_list.add(tmp_add_blank_field)
+
                             current_sprite.cX -= current_sprite.speedX
                             current_sprite.cX1 = current_sprite.cX // FC.SIZE_CELL
                             current_sprite.direct = FC.D_LEFT
@@ -211,9 +242,13 @@ class BaseSprite:
 
         current_sprite.rect.x = current_sprite.cX
         current_sprite.rect.y = current_sprite.cY
+        # if current_sprite.id==2:
+        #     print(f'direct={current_sprite.direct}, local_group={local_group[current_sprite.direct].id}, 4.cY={local_group[current_sprite.direct].cY}')
+        # if current_sprite.id == 4:
+        #     print(f'4.cY={current_sprite.cY} ')
 
     @staticmethod
-    def monster_move(current_sprite, sprites_list):
+    def monster_move(current_sprite, sprites_list, arr_sp):
         from BlankField import BlankField
 
         # если удачно пршли вперед, то направление следующей попытки движения меняеи на следующее
@@ -255,8 +290,10 @@ class BaseSprite:
                     current_sprite.cX1 = current_sprite.cX // FC.SIZE_CELL
                     current_sprite.cY1 = current_sprite.cY // FC.SIZE_CELL
 
-                    sprites_list.add(BlankField(current_sprite.cX1 + tmp[current_sprite.direct][0],
-                                                current_sprite.cY1 + tmp[current_sprite.direct][1]))
+                    tmp_add_blank_field =BlankField(current_sprite.cX1 + tmp[current_sprite.direct][0],
+                                                current_sprite.cY1 + tmp[current_sprite.direct][1])
+                    arr_sp.store(tmp_add_blank_field)
+                    sprites_list.add(tmp_add_blank_field)
 
                 else:  # места для шага вперед нет, меняем направление
                     current_sprite.direct_list = [current_sprite.direct_list[-1], *current_sprite.direct_list[0:3]]
@@ -272,8 +309,11 @@ class BaseSprite:
                 current_sprite.cX1 = current_sprite.cX // FC.SIZE_CELL
                 current_sprite.cY1 = current_sprite.cY // FC.SIZE_CELL
 
-                sprites_list.add(BlankField(current_sprite.cX1 + tmp[current_sprite.direct][0],
-                                            current_sprite.cY1 + tmp[current_sprite.direct][1]))
+                tmp_add_blank_field = BlankField(current_sprite.cX1 + tmp[current_sprite.direct][0],
+                                                 current_sprite.cY1 + tmp[current_sprite.direct][1])
+                arr_sp.store(tmp_add_blank_field)
+                sprites_list.add(tmp_add_blank_field)
+
 
         else:  # завершаем движение в клетке
             tmp = [[0, 0], [0, -1], [0, 0],
@@ -285,7 +325,7 @@ class BaseSprite:
             current_sprite.cY1 = current_sprite.cY // FC.SIZE_CELL
 
     @staticmethod
-    def hero_move(current_sprite, sprites_list):
+    def hero_move(current_sprite, sprites_list, arr_sp):
 
         from BlankField import BlankField
 
@@ -297,13 +337,12 @@ class BaseSprite:
                 my_event = pygame.event.Event(pygame.USEREVENT, message="Exit to next level")
                 pygame.event.post(my_event)
                 return
-            local_group = BaseSprite.create_local_group(current_sprite, sprites_list, current_sprite.cX1, current_sprite.cY1)
-            can_move = local_group[current_sprite.direct].id
-
+            local_group = BaseSprite.create_local_group_arr(current_sprite, arr_sp)
+            can_move = local_group.get_id(current_sprite.direct)
             # can_move = current_sprite.check_move(sprites_list, current_sprite.cX1, current_sprite.cY1,
             #                                     current_sprite.direct)
 
-            if can_move == 0:  # если пусто, то просто шагаем вперед
+            if can_move == FC.EMPTYSPRITE:  # если пусто, то просто шагаем вперед
                 tmp = [[0,0],  [0, -1], [0,0],
                        [-1, 0], [0,0],   [1, 0],
                        [0,0],  [0, 1],   [0,0]]  # для шага вперед
@@ -313,12 +352,16 @@ class BaseSprite:
                 current_sprite.cX1 = current_sprite.cX // FC.SIZE_CELL
                 current_sprite.cY1 = current_sprite.cY // FC.SIZE_CELL
 
-                sprites_list.add(BlankField(current_sprite.cX1 + tmp[current_sprite.direct][0],
-                                            current_sprite.cY1 + tmp[current_sprite.direct][1]))
+                tmp_add_blank_field = BlankField(current_sprite.cX1 + tmp[current_sprite.direct][0],
+                                                 current_sprite.cY1 + tmp[current_sprite.direct][1])
+                arr_sp.store(tmp_add_blank_field)
+                sprites_list.add(tmp_add_blank_field)
+
             else:
                 forward_sprite = current_sprite.get_sprite_by_id(sprites_list, can_move)
                 forward_sprite = local_group[current_sprite.direct]
-                if forward_sprite.unitCod == FC.PLANE:  # съедаем квант поля
+                # if forward_sprite.unitCod == FC.PLANE:  # съедаем квант поля
+                if local_group.get_unitCod(current_sprite.direct) == FC.PLANE:  # съедаем квант поля
                     tmp = [[0, 0], [0, -1], [0, 0],
                            [-1, 0], [0, 0], [1, 0],
                            [0, 0], [0, 1], [0, 0]]  # для шага вперед
@@ -327,11 +370,15 @@ class BaseSprite:
                     current_sprite.cX1 = current_sprite.cX // FC.SIZE_CELL
                     current_sprite.cY1 = current_sprite.cY // FC.SIZE_CELL
 
-                    forward_sprite.kill()
+                    # forward_sprite.kill()
+                    local_group[current_sprite.direct].kill()
 
-                    sprites_list.add(BlankField(current_sprite.cX1 + tmp[current_sprite.direct][0],
-                                                current_sprite.cY1 + tmp[current_sprite.direct][1]))
-                elif forward_sprite.unitCod == FC.DIAMOND:  # съедаем алмаз
+                    tmp_add_blank_field = BlankField(current_sprite.cX1 + tmp[current_sprite.direct][0],
+                                                     current_sprite.cY1 + tmp[current_sprite.direct][1])
+                    arr_sp.store(tmp_add_blank_field)
+                    sprites_list.add(tmp_add_blank_field)
+
+                elif local_group.get_unitCod(current_sprite.direct) == FC.DIAMOND:  # съедаем алмаз
                     tmp = [[0, 0], [0, -1], [0, 0],
                            [-1, 0], [0, 0], [1, 0],
                            [0, 0], [0, 1], [0, 0]]  # для шага вперед
@@ -342,15 +389,19 @@ class BaseSprite:
 
                     current_sprite.collected_diamonds += 1
 
-                    forward_sprite.kill()
+                    # forward_sprite.kill()
+                    local_group[current_sprite.direct].kill()
+
                     if current_sprite.collected_diamonds >= FC.CNT_WIN_DIAMOND:
                         # открываем дверь
                         current_sprite.door_opened(sprites_list)
 
-                    sprites_list.add(BlankField(current_sprite.cX1 + tmp[current_sprite.direct][0],
-                                                current_sprite.cY1 + tmp[current_sprite.direct][1]))
+                    tmp_add_blank_field = BlankField(current_sprite.cX1 + tmp[current_sprite.direct][0],
+                                                     current_sprite.cY1 + tmp[current_sprite.direct][1])
+                    arr_sp.store(tmp_add_blank_field)
+                    sprites_list.add(tmp_add_blank_field)
 
-                elif forward_sprite.unitCod == FC.STONE:  # толкаем камень
+                elif local_group.get_unitCod(current_sprite.direct)  == FC.STONE:  # толкаем камень
                     if current_sprite.direct in [FC.D_RIGHT, FC.D_LEFT]:
                         current_sprite.pushed_stone += current_sprite.force_pushed_stone
                     else:
@@ -358,14 +409,16 @@ class BaseSprite:
 
                     if current_sprite.pushed_stone >= FC.SIZE_CELL and current_sprite.direct == FC.D_RIGHT:
                         # придаем камню справа имульс движения вправо
-                        forward_sprite.direct = FC.D_RIGHT
+                        # forward_sprite.direct = FC.D_RIGHT
+                        local_group[current_sprite.direct].direct = FC.D_RIGHT
 
-                        pass
                     elif current_sprite.pushed_stone >= FC.SIZE_CELL and current_sprite.direct == FC.D_LEFT:
                         # придаем камню слева имульс движения влево
-                        forward_sprite.direct = FC.D_LEFT
-                elif forward_sprite.unitCod == FC.DOOR:  # уходим в открытую дверь
-                    if forward_sprite.is_opened:
+                        # forward_sprite.direct = FC.D_LEFT
+                        local_group[current_sprite.direct].direct = FC.D_LEFT
+
+                elif local_group.get_unitCod(current_sprite.direct)  == FC.DOOR:  # уходим в открытую дверь
+                    if local_group[current_sprite.direct].is_opened:
                         tmp = [[0, 0], [0, -1], [0, 0],
                                [-1, 0], [0, 0], [1, 0],
                                [0, 0], [0, 1], [0, 0]]  # для шага вперед
@@ -383,10 +436,11 @@ class BaseSprite:
             current_sprite.pushed_stone = 0  # обнуляем усилия по толканию камня
 
             if current_sprite.direct == 0:
-                current_sprite.cX1 = current_sprite.cX // FC.SIZE_CELL
-                current_sprite.cY1 = current_sprite.cY // FC.SIZE_CELL
-                current_sprite.cX = current_sprite.cX1 * FC.SIZE_CELL
-                current_sprite.cY = current_sprite.cY1 * FC.SIZE_CELL
+                # current_sprite.cX1 = current_sprite.cX // FC.SIZE_CELL
+                # current_sprite.cY1 = current_sprite.cY // FC.SIZE_CELL
+                # current_sprite.cX = current_sprite.cX1 * FC.SIZE_CELL
+                # current_sprite.cY = current_sprite.cY1 * FC.SIZE_CELL
+                pass
             else:
                 tmp = [[0, 0], [0, -1], [0, 0],
                        [-1, 0], [0, 0], [1, 0],
@@ -401,29 +455,38 @@ class BaseSprite:
         current_sprite.rect.y = current_sprite.cY
 
     @staticmethod
-    def dig_plane(current_sprite, sprites_list, direct_dig):
-        #can_dig = current_sprite.check_move(sprites_list, current_sprite.cX1, current_sprite.cY1, direct_dig)
-        local_group = BaseSprite.create_local_group(current_sprite, sprites_list, current_sprite.cX1, current_sprite.cY1)
-        can_dig = local_group[direct_dig].id
+    def dig_plane(current_sprite, sprites_list, arr_sp, direct_dig):
+
+        local_group = BaseSprite.create_local_group_arr(current_sprite, arr_sp)
+        can_dig = local_group.get_id(direct_dig)
+        print(f'can_dig={can_dig}')
         if can_dig > 0:
             forward_sprite = current_sprite.get_sprite_by_id(sprites_list, can_dig)
-            if forward_sprite.unitCod == FC.PLANE:  # съедаем квант поля
-                from BlankField import BlankField
-                tmp = [[0, 0], [0, -1], [0, 0],
-                       [-1, 0], [0, 0], [1, 0],
-                       [0, 0], [0, 1], [0, 0]]  # для шага вперед
-                forward_sprite.kill()
-                sprites_list.add(BlankField(current_sprite.cX1 + tmp[direct_dig][0],
-                                            current_sprite.cY1 + tmp[direct_dig][1], FC.LENGTH_OF_LIFE * 2))
-            if forward_sprite.unitCod == FC.DIAMOND:  # съедаем квант поля
+            if local_group.get_unitCod(direct_dig) == FC.PLANE:  # съедаем квант поля
                 from BlankField import BlankField
                 tmp = [[0, 0], [0, -1], [0, 0],
                        [-1, 0], [0, 0], [1, 0],
                        [0, 0], [0, 1], [0, 0]]  # для шага вперед
 
                 forward_sprite.kill()
-                sprites_list.add(BlankField(current_sprite.cX1 + tmp[direct_dig][0],
-                                            current_sprite.cY1 + tmp[direct_dig][1]))
+                # local_group(current_sprite.direct).kill()
+                tmp_add_blank_field = BlankField(current_sprite.cX1 + tmp[direct_dig][0],
+                                                 current_sprite.cY1 + tmp[direct_dig][1], FC.LENGTH_OF_LIFE * 2)
+                arr_sp.store(tmp_add_blank_field)
+                sprites_list.add(tmp_add_blank_field)
+
+            if local_group.get_unitCod(direct_dig) == FC.DIAMOND:  # съедаем квант поля
+                from BlankField import BlankField
+                tmp = [[0, 0], [0, -1], [0, 0],
+                       [-1, 0], [0, 0], [1, 0],
+                       [0, 0], [0, 1], [0, 0]]  # для шага вперед
+
+                forward_sprite.kill()
+                tmp_add_blank_field = BlankField(current_sprite.cX1 + tmp[direct_dig][0],
+                                                 current_sprite.cY1 + tmp[direct_dig][1])
+                arr_sp.store(tmp_add_blank_field)
+                sprites_list.add(tmp_add_blank_field)
+
                 current_sprite.collected_diamonds += 1
 
     @staticmethod
@@ -434,7 +497,7 @@ class BaseSprite:
                 i.is_opened = True
 
     @staticmethod
-    def spreading_magma(current_sprite, sprites_list):
+    def spreading_magma(current_sprite, sprites_list, arr_sp):
         from BlankField import BlankField
         tmp = [[0, 0], [0, -1], [0, 0],
                [-1, 0], [0, 0], [1, 0],
@@ -451,16 +514,17 @@ class BaseSprite:
 
         if random.randint(0, 1000) > current_sprite.spreading_chance:
             from Magma import Magma
-            local_group = BaseSprite.create_local_group(current_sprite, sprites_list, current_sprite.cX1, current_sprite.cY1)
+            # local_group = BaseSprite.create_local_group(current_sprite, sprites_list, current_sprite.cX1, current_sprite.cY1)
+            local_group = BaseSprite.create_local_group_arr(current_sprite, arr_sp)
             for d in (FC.D_UP, FC.D_RIGHT, FC.D_DOWN, FC.D_LEFT):
                 #can_move = current_sprite.check_move(sprites_list, current_sprite.cX1, current_sprite.cY1, d)
-                can_move = local_group[d].id
+                # can_move = local_group[d].id
                 tmp_sprite = local_group[d]
-                if tmp_sprite.unitCod in [FC.PLANE]:
+                if local_group.get_unitCod(d) in [FC.PLANE]:
                     can_spreading.append((current_sprite.cX1 + tmp[d][0],
                                           current_sprite.cY1 + tmp[d][1]))
                     may_be_killed.append(tmp_sprite)
-                elif tmp_sprite.unitCod in [FC.BLANKFIELD]:
+                elif local_group.get_unitCod(d) in [FC.BLANKFIELD, FC.EMPTYSPRITE]:
                     can_spreading.append((current_sprite.cX1 + tmp[d][0], current_sprite.cY1 + tmp[d][1]))
 
             if len(can_spreading) == 0:  # вся магма заперта

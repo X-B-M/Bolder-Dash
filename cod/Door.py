@@ -44,7 +44,7 @@ class Door(pygame.sprite.Sprite, BaseSprite):
         self.rect.x = self.cX
         self.rect.y = self.cY
 
-    def update(self, sp):
+    def update(self, sp, arr_sp):
         self.image = self.images[self.__imindex]
 
     def draw(self, window):

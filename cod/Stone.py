@@ -60,12 +60,9 @@ class Stone(pygame.sprite.Sprite, BaseSprite):
         self.unitName = "stone"
         self.unitCod = FC.STONE
 
-    def update(self, sp):
-        # a=pygame.sprite.spritecollide(self, sp, False, collided=pygame.sprite.collide_rect_ratio(1.10))
-        # for i in a:
-        #     print(i)
+    def update(self, sp, arr_sp):
 
-        self.fall_and_slippery(self, sp)
+        self.fall_and_slippery(self, sp, arr_sp)
 
     def draw(self, window):
         window.blit(self.image, (self.cX, self.cY))

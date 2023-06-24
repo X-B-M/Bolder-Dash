@@ -57,7 +57,7 @@ class Magma(pygame.sprite.Sprite, BaseSprite):
         self.rect.x = self.cX
         self.rect.y = self.cY
 
-    def update(self, sp):
+    def update(self, sp, arr_sp):
 
         if self.statusTimeLife <= 0:
             self.statusTimeLife = 13
@@ -67,7 +67,7 @@ class Magma(pygame.sprite.Sprite, BaseSprite):
         self.__imindex = 7 & (self.statusTimeLife // 4)
         self.image = self.images[self.__imindex]
 
-        self.spreading_magma(self, sp)
+        self.spreading_magma(self, sp, arr_sp)
 
     def draw(self, window):
         window.blit(self.image, (self.cX, self.cY))

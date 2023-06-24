@@ -58,7 +58,7 @@ class Explosiv(pygame.sprite.Sprite, BaseSprite):
         self.unitName = "blank"
         self.unitCod = FC.EXPLOSIVE
 
-    def update(self, sp):
+    def update(self, sp, arr_sp):
         if self.statusTimeLife <= 0:
             self.statusTimeLife = 13
         else:

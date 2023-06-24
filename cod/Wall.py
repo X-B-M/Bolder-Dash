@@ -49,7 +49,7 @@ class Wall(pygame.sprite.Sprite, BaseSprite):
         else:
             self.unitName = "wall_brick"
             self.unitCod = FC.WALL_BRICK
-    def update(self, sp):
+    def update(self, sp, arr_sp):
         self.rect.x = self.cX
         self.rect.y = self.cY
 

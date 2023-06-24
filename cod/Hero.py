@@ -70,23 +70,23 @@ class Hero(pygame.sprite.Sprite, BaseSprite):
 
         pygame.display.set_caption(
             'Алмазов собрано: ' + str(self.collected_diamonds) + ' из ' + str(FC.CNT_WIN_DIAMOND))
-    def update(self, sp):
+    def update(self, sp, arr_sp):
 
         if self.cX % FC.SIZE_CELL == 0 and self.cY % FC.SIZE_CELL == 0:
 
             keys = pygame.key.get_pressed()
             if keys[pygame.K_RIGHT] and (keys[K_SPACE] or keys[K_LSHIFT]):
                 # копаем справа
-                self.dig_plane(self, sp, FC.D_RIGHT)
+                self.dig_plane(self, sp, arr_sp, FC.D_RIGHT)
             elif keys[pygame.K_LEFT] and (keys[K_SPACE] or keys[K_LSHIFT]):
                 # копаем слева
-                self.dig_plane(self, sp, FC.D_LEFT)
+                self.dig_plane(self, sp, arr_sp, FC.D_LEFT)
             elif keys[pygame.K_UP] and (keys[K_SPACE] or keys[K_LSHIFT]):
                 # копаем вверх
-                self.dig_plane(self, sp, FC.D_UP)
+                self.dig_plane(self, sp, arr_sp, FC.D_UP)
             elif keys[pygame.K_DOWN] and (keys[K_SPACE] or keys[K_LSHIFT]):
                 # копаем вниз
-                self.dig_plane(self, sp, FC.D_DOWN)
+                self.dig_plane(self, sp, arr_sp, FC.D_DOWN)
             elif keys[K_LEFT]:
                 self.direct = FC.D_LEFT
             elif keys[K_RIGHT]:
@@ -99,7 +99,7 @@ class Hero(pygame.sprite.Sprite, BaseSprite):
             else:
                 self.direct = 0
 
-        self.hero_move(self, sp)
+        self.hero_move(self, sp, arr_sp)
 
         if self.collected_diamonds != self.collected_diamonds_prev:
             self.collected_diamonds_prev = self.collected_diamonds

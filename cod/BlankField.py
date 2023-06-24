@@ -40,7 +40,7 @@ class BlankField(pygame.sprite.Sprite, BaseSprite):
         self.unitName = "blank"
         self.unitCod = FC.BLANKFIELD
 
-    def update(self, sp):
+    def update(self, sp, arr_sp):
         self.time_to_live -= self.speed_live
         if self.time_to_live <= 0:
             self.kill()

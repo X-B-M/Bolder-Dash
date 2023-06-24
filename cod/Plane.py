@@ -33,7 +33,7 @@ class Plane(pygame.sprite.Sprite, BaseSprite):
         self.rect.x = self.cX-1
         self.rect.y = self.cY-1
 
-    def update(self, sp):
+    def update(self, sp, arr_sp):
         # self.image = self.images[self.__imindex]
         pass
 

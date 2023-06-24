@@ -64,7 +64,7 @@ class MonsterBlank(pygame.sprite.Sprite, BaseSprite):
     def move(self):
         pass
 
-    def update(self, sp):
+    def update(self, sp, arr_sp):
 
         if self.statusTimeLife <= 0:
             self.statusTimeLife = 13
@@ -75,7 +75,7 @@ class MonsterBlank(pygame.sprite.Sprite, BaseSprite):
         self.__imindex = 7 & (self.statusTimeLife // 4)
         self.image = self.images[self.__imindex]
 
-        self.monster_move(self, sp)
+        self.monster_move(self, sp, arr_sp)
 
         self.rect.x = self.cX
         self.rect.y = self.cY
