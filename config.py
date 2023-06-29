@@ -5,6 +5,27 @@ class FieldConstants:
     CNT_MAX_SPRITE = 2000000000
     LENGTH_OF_LIFE = 40
 
+    D_UP_L   = 0  #схема кодирования направлений движения
+    D_UP     = 1  #   [D_UP_L]    [D_UP]    [D_UP_R]
+    D_UP_R   = 2  #   [D_LEFT]   [D_STOP]  [D_RIGHT]
+    D_LEFT   = 3  #   [D_DOWN_L] [D_DOWN] [D_DOWN_R]
+    D_STOP   = 4  #
+    D_RIGHT  = 5  #
+    D_DOWN_L = 6  #
+    D_DOWN   = 7  #
+    D_DOWN_R = 8  #
+    DIRECTION=[D_UP_L,D_UP,D_UP_R,D_LEFT,D_STOP,D_RIGHT,D_DOWN_L,D_DOWN,D_DOWN_R]
+
+
+    MOVE_LIST = [[0, 0], [0, -1], [0, 0],   #
+                 [-1, 0], [0, 0], [1, 0],
+                 [0, 0], [0, 1], [0, 0]]  # для движения в заданном направлении
+
+
+
+    EMPTYPLACE = -1
+
+    EMPTYSPRITE = -1
     EXPLOSIVE = 0
     BLANKFIELD = 0
     WALL_STEEL = 1
@@ -18,6 +39,8 @@ class FieldConstants:
     DOOR = 9
     MAGMA = 10
 
+    CNT_WIN_DIAMOND = 10 # количество собранных алмазов для выхода из уровня
+    PRESSURE_NON_CRITICAL = 1500 # интервал до превращения магмы  в камень
 
 def set_sprite_id() -> int:
     for i in range(1, FieldConstants.CNT_MAX_SPRITE):

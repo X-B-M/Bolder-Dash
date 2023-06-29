@@ -1,10 +1,5 @@
-import pygame
-from pygame.locals import *
-
-from BlankField import *
 from Explosiv import *
-from base_sprite import BaseSprite
-from config import itera_id
+from cod.base_sprite import BaseSprite
 
 
 class Diamond(pygame.sprite.Sprite, BaseSprite):
@@ -12,7 +7,7 @@ class Diamond(pygame.sprite.Sprite, BaseSprite):
     speedY = 5
     cY1 = 0
     cX1 = 0
-    direct = 3
+    direct = FC.D_DOWN
     slippery = True  # скользкий, с него камни скатываются
     kinect_energy = 0
     statusTimeLife = 0  # для отсчета номера картинки
@@ -62,7 +57,7 @@ class Diamond(pygame.sprite.Sprite, BaseSprite):
     def move(self):
         pass
 
-    def update(self, sp):
+    def update(self, sp, arr_sp):
 
         if self.statusTimeLife <= 0:
             self.statusTimeLife = 13
@@ -72,7 +67,7 @@ class Diamond(pygame.sprite.Sprite, BaseSprite):
         self.__imindex = 7 & (self.statusTimeLife // 4)
         self.image = self.images[self.__imindex]
 
-        self.fall_and_slippery(self, sp)
+        self.fall_and_slippery(self, sp, arr_sp)
 
     def draw(self, window):
         window.blit(self.image(self.cX, self.cY))

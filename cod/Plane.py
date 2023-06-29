@@ -1,7 +1,6 @@
 import pygame
-from pygame.locals import *
-from config import FieldConstants as FC, itera_id
-from base_sprite import BaseSprite
+from config import FieldConstants as FC
+from cod.base_sprite import BaseSprite
 
 class Plane(pygame.sprite.Sprite, BaseSprite):
     slippery = False  # не скользкий, с него камни не скатываются
@@ -31,10 +30,10 @@ class Plane(pygame.sprite.Sprite, BaseSprite):
 
         self.unitName = "plane"
         self.unitCod = FC.PLANE
-        self.rect.x = self.cX
-        self.rect.y = self.cY
+        self.rect.x = self.cX-1
+        self.rect.y = self.cY-1
 
-    def update(self, sp):
+    def update(self, sp, arr_sp):
         # self.image = self.images[self.__imindex]
         pass
 

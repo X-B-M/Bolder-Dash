@@ -1,8 +1,8 @@
 import pygame
 from pygame.locals import *
 
-from base_sprite import BaseSprite
-from config import FieldConstants as FC, itera_id
+from cod.base_sprite import BaseSprite
+from config import FieldConstants as FC
 
 
 class Explosiv(pygame.sprite.Sprite, BaseSprite):
@@ -58,7 +58,7 @@ class Explosiv(pygame.sprite.Sprite, BaseSprite):
         self.unitName = "blank"
         self.unitCod = FC.EXPLOSIVE
 
-    def update(self, sp):
+    def update(self, sp, arr_sp):
         if self.statusTimeLife <= 0:
             self.statusTimeLife = 13
         else:
