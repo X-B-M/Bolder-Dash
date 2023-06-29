@@ -16,6 +16,13 @@ class FieldConstants:
     D_DOWN_R = 8  #
     DIRECTION=[D_UP_L,D_UP,D_UP_R,D_LEFT,D_STOP,D_RIGHT,D_DOWN_L,D_DOWN,D_DOWN_R]
 
+
+    MOVE_LIST = [[0, 0], [0, -1], [0, 0],   #
+                 [-1, 0], [0, 0], [1, 0],
+                 [0, 0], [0, 1], [0, 0]]  # для движения в заданном направлении
+
+
+
     EMPTYPLACE = -1
 
     EMPTYSPRITE = -1

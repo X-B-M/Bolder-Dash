@@ -1,10 +1,13 @@
 from pygame.locals import *
-from config import FieldConstants as fc
+from config import FieldConstants as FC
 from cod.BlankField import *
 from cod.base_sprite import BaseSprite
+from monster_move import MonsterSprite
 
 
-class MonsterDiamond(pygame.sprite.Sprite, BaseSprite):
+
+class MonsterDiamond(pygame.sprite.Sprite, BaseSprite, MonsterSprite):
+
     speedX = 5
     speedY = 5
     cY1 = 0
@@ -13,7 +16,15 @@ class MonsterDiamond(pygame.sprite.Sprite, BaseSprite):
     cX2 = 0
     status = 0
     direct = 3
-    direct_list = [FC.D_LEFT,FC.D_DOWN,FC.D_RIGHT,FC.D_UP]  # двигаемся по правилу левой руки.
+    direct_list = [FC.D_LEFT, FC.D_DOWN, FC.D_RIGHT, FC.D_UP]  # двигаемся по правилу левой руки.
+    move_list = [[0, 0], [0, -1], [0, 0],  #
+                 [-1, 0], [0, 0], [1, 0],
+                 [0, 0], [0, 1], [0, 0]]  # для движения в заданном направлении
+
+    support_list = [[0, 0, 0], [1, 0, 5], [0, 0, 0],   # x,y,supp_direct
+                    [0, -1, 1], [0, 0, 4], [0, 1, 7],
+                    [0, 0, 0], [-1, 0, 3], [0, 0, 0]]  # для поиска опоры MonsterDiamond
+
     slippery = False  # скользкий, с него камни скатываются
     prev_status = 0  # информация о том, в прошлой итерции обект двигался (1,2,3,4)
     statusTimeLife = 0  # Время движения в заданном направлении
@@ -51,11 +62,11 @@ class MonsterDiamond(pygame.sprite.Sprite, BaseSprite):
         self.image = self.images[self.__imindex]
         self.rect = image.get_rect()
 
-        self.cX = parX * fc.SIZE_CELL
-        self.cY = parY * fc.SIZE_CELL
+        self.cX = parX * FC.SIZE_CELL
+        self.cY = parY * FC.SIZE_CELL
 
-        self.cX1 = self.cX // fc.SIZE_CELL
-        self.cY1 = self.cY // fc.SIZE_CELL
+        self.cX1 = self.cX // FC.SIZE_CELL
+        self.cY1 = self.cY // FC.SIZE_CELL
 
         self.unitName = "monstrdiamond"
         self.unitCod = FC.MONSTERDIAMOND
@@ -74,7 +85,8 @@ class MonsterDiamond(pygame.sprite.Sprite, BaseSprite):
         self.__imindex = 7 & (self.statusTimeLife // 4)
         self.image = self.images[self.__imindex]
 
-        self.monster_move(self, sp, arr_sp)
+        # self.monster_move(current_sprite=self, arr_sp=arr_sp)
+        self.monster_move(self, sp, arr_sp=arr_sp)
 
         self.rect.x = self.cX
         self.rect.y = self.cY

@@ -18,7 +18,7 @@ class Hero(pygame.sprite.Sprite, BaseSprite):
     speedY = 5
     slippery = False
     pushed_stone = 0
-    force_pushed_stone = 5
+    force_pushed_stone = 4
     collected_diamonds =0
     collected_diamonds_prev = 0
     finished_X1 = -1 # когда эта координата станет положительной, значит дверь открыта и можно покинуть уровень,
