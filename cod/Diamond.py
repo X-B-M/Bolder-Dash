@@ -1,4 +1,4 @@
-from Explosiv import *
+from cod.Explosiv import *
 from cod.base_sprite import BaseSprite
 
 

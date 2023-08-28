@@ -1,4 +1,4 @@
-from base_sprite import BaseSprite
+from cod.base_sprite import BaseSprite
 from config import FieldConstants as FC
 
 
@@ -63,10 +63,10 @@ class MonsterSprite:
         for i in area_of_explosive:
             if i not in not_append:
                 if cur_spr.unitCod in [FC.MONSTERDIAMOND, FC.HERO]:  # получаем алмазы
-                    from Diamond import Diamond
+                    from cod.Diamond import Diamond
                     sp.add(Diamond(i[0], i[1]))
                 else:
-                    from Explosiv import Explosiv
+                    from cod.Explosiv import Explosiv
                     sp.add(Explosiv(i[0], i[1]))
 
     @staticmethod

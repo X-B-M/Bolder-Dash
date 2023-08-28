@@ -1,4 +1,4 @@
-from Diamond import *
+from cod.Diamond import *
 from config import FieldConstants as FC
 from cod.base_sprite import BaseSprite
 

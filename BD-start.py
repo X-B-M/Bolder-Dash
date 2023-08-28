@@ -31,7 +31,7 @@ class General:
     sizeFieldY = FC.SIZEFIELD_Y * FC.SIZE_CELL
     map_game = []
 
-    def __init__(self) -> object:
+    def __init__(self):
         pygame.init()
         pygame.display.set_mode((self.sizeFieldX, self.sizeFieldY))
         pygame.display.set_caption('Бу-го-га')
@@ -65,7 +65,7 @@ class General:
                 general.location = exit_location
 
 
-class Start_location(Location):
+class Start_Location(Location):
     def __init__(self):
         Location.__init__(self)
         background = pygame.image.load('img/first.png')
@@ -139,9 +139,9 @@ class Game_location(Location):
                         self.game_units.add(tmp)
                         # self.game_units.add(self.arr_sprites.store(Wall(tX, tY, 1))
                     elif l1 == "2":
-                         tmp = Wall(tX, tY, 2)
-                         self.arr_sprites.store(tmp)
-                         self.game_units.add(tmp)
+                        tmp = Wall(tX, tY, 2)
+                        self.arr_sprites.store(tmp)
+                        self.game_units.add(tmp)
                     elif l1 == "3":
                         tmp = Plane(tX, tY)
                         self.arr_sprites.store(tmp)
@@ -199,17 +199,18 @@ class ArrSprite():
     map = []
 
     def __init__(self):
-        self.map = [[None for i in range(FC.SIZEFIELD_Y)] for j in range(FC.SIZEFIELD_X)]
+        self.map = [[None for _ in range(FC.SIZEFIELD_Y)] for __ in range(FC.SIZEFIELD_X)]
 
     def store(self, parSprite):
         self.map[parSprite.cX1][parSprite.cY1] = parSprite
 
     def clear(self):
-        self.map = [[None for i in range(FC.SIZEFIELD_Y)] for j in range(FC.SIZEFIELD_X)]
+        self.map = [[None for _ in range(FC.SIZEFIELD_Y)] for __ in range(FC.SIZEFIELD_X)]
 
 general = General()
 
-start_location = Start_location()
+
+start_location = Start_Location()
 levels = ['maps/' + i for i in os.listdir('maps')]
 levels.sort()
 exit_location = Exit_location()

@@ -149,7 +149,7 @@ class BaseSprite:
                         # цель найдена, взрываем
                     # BaseSprite.explosiv_sprite(sprites_list, local_group.get_id(FC.D_DOWN))
                     current_sprite.kill()
-                    from monster_move import MonsterSprite
+                    from cod.monster_move import MonsterSprite
                     explosive_sprite_direct_id = local_group.get_id(FC.D_DOWN)
                     explosive_sprite_direct = BaseSprite.get_sprite_by_id(sprites_list, explosive_sprite_direct_id)
                     local_group = BaseSprite.create_local_group_arr(explosive_sprite_direct, arr_sp)
@@ -157,7 +157,7 @@ class BaseSprite:
                     return
 
         if current_sprite.cX % FC.SIZE_CELL == 0 and current_sprite.cY % FC.SIZE_CELL == 0:  # можно ли начать двигаться в текущем  направлении
-            from BlankField import BlankField
+            from cod.BlankField import BlankField
 
             if local_group.get_id(FC.D_DOWN) == FC.EMPTYSPRITE: # and current_sprite.direct == FC.D_DOWN:  # падаем вниз
                 tmp_add_blank_field = BlankField(current_sprite.cX1, current_sprite.cY1 + 1)
@@ -258,7 +258,7 @@ class BaseSprite:
     @staticmethod
     def hero_move(current_sprite, sprites_list, arr_sp):
 
-        from BlankField import BlankField
+        from cod.BlankField import BlankField
 
         if current_sprite.cX % FC.SIZE_CELL == 0 and current_sprite.cY % FC.SIZE_CELL == 0 and current_sprite.direct != 0:  # можно ли начать
             # двигаться в текущем  направлении
@@ -366,7 +366,7 @@ class BaseSprite:
         if can_dig > 0:
             forward_sprite = current_sprite.get_sprite_by_id(sprites_list, can_dig)
             if local_group.get_unitCod(direct_dig) == FC.PLANE:  # съедаем квант поля
-                from BlankField import BlankField
+                from cod.BlankField import BlankField
 
                 forward_sprite.kill()
                 # local_group(current_sprite.direct).kill()
@@ -376,7 +376,7 @@ class BaseSprite:
                 sprites_list.add(tmp_add_blank_field)
 
             if local_group.get_unitCod(direct_dig) == FC.DIAMOND:  # съедаем квант поля
-                from BlankField import BlankField
+                from cod.BlankField import BlankField
 
                 forward_sprite.kill()
                 tmp_add_blank_field = BlankField(current_sprite.cX1 + FC.MOVE_LIST[direct_dig][0],
@@ -395,7 +395,7 @@ class BaseSprite:
 
     @staticmethod
     def spreading_magma(current_sprite, sprites_list, arr_sp):
-        from BlankField import BlankField
+        from cod.BlankField import BlankField
         tmp = [[-1, -1], [0, -1], [1, -1],
                [-1, 0], [0, 0], [1, 0],
                [-1, 1], [0, 1], [1, 1]]  # для шага вперед
@@ -403,7 +403,7 @@ class BaseSprite:
         may_be_killed = []
         current_sprite.pressureNonCritical += 1
         if current_sprite.pressureNonCritical >= FC.PRESSURE_NON_CRITICAL:  # пора, превращаемся в камень
-            from Stone import Stone
+            from cod.Stone import Stone
             for i in sprites_list:
                 if i.unitCod == FC.MAGMA:
                     tmp_add_blank_field = Stone(i.cX1, i.cY1)
@@ -414,7 +414,7 @@ class BaseSprite:
 
 
         if random.randint(0, 1000) > current_sprite.spreading_chance:
-            from Magma import Magma
+            from cod.Magma import Magma
             local_group = BaseSprite.create_local_group_arr(current_sprite, arr_sp)
 
             for d in (FC.D_UP, FC.D_RIGHT, FC.D_DOWN, FC.D_LEFT):
@@ -433,7 +433,7 @@ class BaseSprite:
                     if i.unitCod == FC.MAGMA:
                         time_ch = time_ch & i.pressureCritical
                 if time_ch == 1:  # пора, превращаемся
-                    from Diamond import Diamond
+                    from cod.Diamond import Diamond
                     for i in sprites_list:
                         if i.unitCod == FC.MAGMA:
 

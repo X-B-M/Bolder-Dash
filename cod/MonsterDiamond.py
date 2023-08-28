@@ -2,7 +2,7 @@ from pygame.locals import *
 from config import FieldConstants as FC
 from cod.BlankField import *
 from cod.base_sprite import BaseSprite
-from monster_move import MonsterSprite
+from cod.monster_move import MonsterSprite
 
 
 

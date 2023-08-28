@@ -1,6 +1,6 @@
 from pygame.locals import *
 
-from BlankField import *
+from cod.BlankField import *
 from cod.base_sprite import BaseSprite
 from config import FieldConstants as FC
 
